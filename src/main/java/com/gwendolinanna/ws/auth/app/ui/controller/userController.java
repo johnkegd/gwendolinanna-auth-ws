@@ -1,9 +1,12 @@
 package com.gwendolinanna.ws.auth.app.ui.controller;
 
+import com.gwendolinanna.ws.auth.app.ui.model.request.UserDetailsRequestModel;
+import com.gwendolinanna.ws.auth.app.ui.model.response.UserRest;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,8 +23,9 @@ public class userController {
     }
 
     @PostMapping
-    public String createUser() {
-        return "create user called";
+    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
+
+        return null;
     }
 
     @PutMapping
