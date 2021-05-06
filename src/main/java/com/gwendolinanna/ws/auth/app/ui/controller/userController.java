@@ -1,7 +1,12 @@
 package com.gwendolinanna.ws.auth.app.ui.controller;
 
+import com.gwendolinanna.ws.auth.app.service.UserService;
+import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 import com.gwendolinanna.ws.auth.app.ui.model.request.UserDetailsRequestModel;
 import com.gwendolinanna.ws.auth.app.ui.model.response.UserRest;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,15 +22,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("users")
 public class userController {
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping
     public String getUser() {
         return "get user called";
     }
 
     @PostMapping
-    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
+    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) {
+        UserRest returnValue = new UserRest();
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(userDetails,userDto);
 
-        return null;
+        UserDto createdUser = userService.createUser(userDto);
+        BeanUtils.copyProperties(createdUser,returnValue);
+
+        return returnValue;
     }
 
     @PutMapping
