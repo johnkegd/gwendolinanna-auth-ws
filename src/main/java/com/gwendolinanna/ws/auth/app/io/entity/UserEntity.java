@@ -1,32 +1,49 @@
-package com.gwendolinanna.ws.auth.app.shared.dto;
+package com.gwendolinanna.ws.auth.app.io.entity;
 
 import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * @author Johnkegd
  */
-public class UserDto implements Serializable {
-    private static final long serialVersionUID = 6454654435153164L;
-    private long id;
+@Entity(name ="users")
+public class UserEntity implements Serializable {
+    private static long serialVersionUID = 65456465456456L;
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(nullable = false)
     private String userId;
+
+    @Column(nullable = false, length = 50)
     private String firstName;
+
+    @Column(nullable = false, length = 50)
     private String lastName;
+
+    @Column(nullable = false, length = 120)
     private String email;
-    private String password;
+
+    @Column(nullable = false)
     private String encryptedPassword;
+
     private String emailVerificationToken;
-    private boolean emailVerificationStatus;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
+    @Column(nullable = false)
+    private boolean emailVerificationStatus = false;
 
-    public long getId() {
-        return id;
-    }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+    public Long getId() {
+        return id;
     }
 
     public String getUserId() {
@@ -61,14 +78,6 @@ public class UserDto implements Serializable {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getEncryptedPassword() {
         return encryptedPassword;
     }
@@ -92,5 +101,4 @@ public class UserDto implements Serializable {
     public void setEmailVerificationStatus(boolean emailVerificationStatus) {
         this.emailVerificationStatus = emailVerificationStatus;
     }
-
 }

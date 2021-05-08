@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class userController {
 
     @Autowired
-    private UserService userService;
+    UserService userService;
 
     @GetMapping
     public String getUser() {
