@@ -1,5 +1,6 @@
 package com.gwendolinanna.ws.auth.app.ui.controller;
 
+import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
 import com.gwendolinanna.ws.auth.app.service.UserService;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 import com.gwendolinanna.ws.auth.app.ui.model.request.UserDetailsRequestModel;
@@ -32,6 +33,8 @@ public class userController {
 
     @PostMapping
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) {
+
+
         UserRest returnValue = new UserRest();
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetails,userDto);
