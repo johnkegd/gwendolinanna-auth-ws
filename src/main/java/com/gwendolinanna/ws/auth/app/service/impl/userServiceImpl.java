@@ -7,6 +7,8 @@ import com.gwendolinanna.ws.auth.app.shared.Utils;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,11 @@ public class userServiceImpl implements UserService {
 
 
         return user;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String firstName) throws UsernameNotFoundException {
+        return null;
     }
 
 }
