@@ -24,7 +24,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests().
         antMatchers(HttpMethod.POST, SecurityConstans.SING_UP_URL).
-        permitAll().anyRequest().authenticated();
+        permitAll().anyRequest().authenticated().and().addFilter(new AuthenticationFilter(authenticationManager()));
     }
 
     @Override
