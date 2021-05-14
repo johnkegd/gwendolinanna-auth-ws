@@ -1,6 +1,6 @@
 package com.gwendolinanna.ws.auth.app.service.impl;
 
-import com.gwendolinanna.ws.auth.app.UserRepository;
+import com.gwendolinanna.ws.auth.app.io.repositories.UserRepository;
 import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
 import com.gwendolinanna.ws.auth.app.service.UserService;
 import com.gwendolinanna.ws.auth.app.shared.Utils;
@@ -42,11 +42,24 @@ public class userServiceImpl implements UserService {
 
         UserEntity storedUserDetails = userRepository.save(userEntity);
 
-        UserDto returnValue = new UserDto();
-        BeanUtils.copyProperties(storedUserDetails, returnValue);
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(storedUserDetails, userDto);
 
 
         return user;
+    }
+
+    @Override
+    public UserDto getUserByEmail(String email) {
+        UserEntity userEntity = userRepository.findUserByEmail(email);
+
+        if (userEntity == null)
+            throw new UsernameNotFoundException(email);
+
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(userEntity,userDto);
+
+        return userDto;
     }
 
     @Override

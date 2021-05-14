@@ -1,4 +1,4 @@
-package com.gwendolinanna.ws.auth.app;
+package com.gwendolinanna.ws.auth.app.io.repositories;
 
 import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
 import org.springframework.data.repository.CrudRepository;
