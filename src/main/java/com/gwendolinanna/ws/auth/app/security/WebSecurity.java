@@ -24,11 +24,18 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests().
         antMatchers(HttpMethod.POST, SecurityConstans.SING_UP_URL).
-        permitAll().anyRequest().authenticated().and().addFilter(new AuthenticationFilter(authenticationManager()));
+        permitAll().anyRequest().authenticated().and().addFilter(getAuthenticationFilter());
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder amb)throws Exception {
         amb.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
+
+    public AuthenticationFilter getAuthenticationFilter() throws Exception {
+        final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
+        filter.setFilterProcessesUrl("/users/login");
+        return filter;
+    }
+
 }
