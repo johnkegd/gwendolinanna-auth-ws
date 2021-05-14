@@ -7,10 +7,12 @@ import com.gwendolinanna.ws.auth.app.shared.Utils;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.ArrayList;
 
 /**
  * @author Johnkegd
@@ -29,7 +31,7 @@ public class userServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto user) {
-        if(userRepository.findUserByEmail(user.getEmail()) != null)
+        if (userRepository.findUserByEmail(user.getEmail()) != null)
             throw new RuntimeException("User already Exists");
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(user, userEntity);
@@ -48,8 +50,13 @@ public class userServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String firstName) throws UsernameNotFoundException {
-        return null;
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserEntity userEntity = userRepository.findUserByEmail(email);
+
+        if (userEntity == null)
+            throw  new UsernameNotFoundException(email);
+
+        return new User(userEntity.getEmail(),userEntity.getEncryptedPassword(),new ArrayList<>());
     }
 
 }
