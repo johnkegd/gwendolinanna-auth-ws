@@ -59,9 +59,22 @@ public class userController {
         return returnValue;
     }
 
-    @PutMapping
-    public String updateUser() {
-        return "update user Called";
+    @PutMapping(path = "/{id}",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public UserRest updateUser(@PathVariable String id, @RequestBody UserDetailsRequestModel userDetails) {
+        UserRest userRest = new UserRest();
+
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(userDetails, userDto);
+
+        UserDto updateUser = userService.updateUserById(id, userDto);
+        BeanUtils.copyProperties(updateUser,userRest);
+
+        if (updateUser == null)
+            throw new RuntimeException(ErrorMessages.COULD_NOT_UPDATE_RECORD.getErrorMessage());
+
+        return userRest;
     }
 
     @DeleteMapping
