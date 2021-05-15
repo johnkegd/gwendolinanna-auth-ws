@@ -1,9 +1,11 @@
 package com.gwendolinanna.ws.auth.app.ui.controller;
 
+import com.gwendolinanna.ws.auth.app.exceptions.UserServiceException;
 import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
 import com.gwendolinanna.ws.auth.app.service.UserService;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 import com.gwendolinanna.ws.auth.app.ui.model.request.UserDetailsRequestModel;
+import com.gwendolinanna.ws.auth.app.ui.model.response.ErrorMessages;
 import com.gwendolinanna.ws.auth.app.ui.model.response.UserRest;
 
 import org.springframework.beans.BeanUtils;
@@ -40,11 +42,14 @@ public class userController {
     }
 
     @PostMapping(
-            consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) {
-
+    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) throws Exception {
         UserRest returnValue = new UserRest();
+
+        if(userDetails.getFirstName().isEmpty())
+            throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
+
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetails,userDto);
 
