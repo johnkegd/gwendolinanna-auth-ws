@@ -66,7 +66,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         UserDto userDto = userService.getUserByEmail(userName);
 
 
-        response.addHeader(SecurityConstans.TOKEN_PREFIX, SecurityConstans.TOKEN_PREFIX + token);
+        response.addHeader(SecurityConstans.HEADER_STRING, SecurityConstans.TOKEN_PREFIX + token);
         response.addHeader("UserID",userDto.getUserId());
     }
 }
