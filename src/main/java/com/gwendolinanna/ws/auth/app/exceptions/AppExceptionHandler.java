@@ -25,12 +25,13 @@ public class AppExceptionHandler {
     }
 
     //Only as example following the spring boot docs and course to have a general custom model for exceptions
+    /*
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<Object> handleGeneralExceptions(Exception exception, WebRequest request) {
         ErrorMessage customErrorModel = new ErrorMessage(new Date(),exception.getMessage());
         return new ResponseEntity<>(customErrorModel, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
+    */
 
 
 }

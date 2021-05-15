@@ -1,13 +1,13 @@
 package com.gwendolinanna.ws.auth.app.ui.controller;
 
 import com.gwendolinanna.ws.auth.app.exceptions.UserServiceException;
-import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
 import com.gwendolinanna.ws.auth.app.service.UserService;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 import com.gwendolinanna.ws.auth.app.ui.model.request.UserDetailsRequestModel;
 import com.gwendolinanna.ws.auth.app.ui.model.response.ErrorMessages;
+import com.gwendolinanna.ws.auth.app.ui.model.response.OperationStatusModel;
+import com.gwendolinanna.ws.auth.app.ui.model.response.RequestOperationStatus;
 import com.gwendolinanna.ws.auth.app.ui.model.response.UserRest;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -77,8 +77,17 @@ public class userController {
         return userRest;
     }
 
-    @DeleteMapping
-    public String deleteUser() {
-        return "delete user called";
+    @DeleteMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public OperationStatusModel deleteUser(@PathVariable String id) {
+        OperationStatusModel operation = new OperationStatusModel();
+
+        operation.setOperationName(RequestOperationName.DELETE.name());
+        userService.deleteUserById(id);
+
+        operation.setOperationResult(RequestOperationStatus.SUCCESS.name());
+
+        //TODO implement operationData from deleted user
+
+        return operation;
     }
 }

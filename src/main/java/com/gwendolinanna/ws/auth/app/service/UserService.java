@@ -12,5 +12,6 @@ public interface UserService extends UserDetailsService {
     UserDto getUserByEmail(String email);
     UserDto getUserByUserId(String userId);
     UserDto updateUserById(String userId, UserDto user);
+    void deleteUserById(String userId);
 
 }
