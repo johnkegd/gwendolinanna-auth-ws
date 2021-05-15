@@ -8,15 +8,20 @@ import com.gwendolinanna.ws.auth.app.shared.Utils;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 import com.gwendolinanna.ws.auth.app.ui.model.response.ErrorMessage;
 import com.gwendolinanna.ws.auth.app.ui.model.response.ErrorMessages;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.transaction.Transactional;
 
 /**
  * @author Johnkegd
@@ -96,6 +101,7 @@ public class userServiceImpl implements UserService {
         return userDto;
     }
 
+    @Transactional
     @Override
     public void deleteUserById(String userId) {
         UserEntity userEntity = userRepository.findByUserId(userId);
@@ -103,6 +109,25 @@ public class userServiceImpl implements UserService {
             throw new UsernameNotFoundException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
 
         userRepository.delete(userEntity);
+    }
+
+    @Override
+    public List<UserDto> getUsers(int page, int limit) {
+        List<UserDto> usersDto = new ArrayList<>();
+
+        if (page > 0) page--;
+
+        Pageable pageableRequest = PageRequest.of(page, limit);
+        Page<UserEntity> usersPage = userRepository.findAll(pageableRequest);
+        List<UserEntity> users = usersPage.getContent();
+
+        for (UserEntity userEntity : users) {
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(userEntity, userDto);
+            usersDto.add(userDto);
+        }
+
+        return usersDto;
     }
 
     @Override

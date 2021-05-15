@@ -1,6 +1,7 @@
 package com.gwendolinanna.ws.auth.app.ui.controller;
 
 import com.gwendolinanna.ws.auth.app.exceptions.UserServiceException;
+import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
 import com.gwendolinanna.ws.auth.app.service.UserService;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 import com.gwendolinanna.ws.auth.app.ui.model.request.UserDetailsRequestModel;
@@ -18,7 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Johnkegd
@@ -90,4 +95,22 @@ public class userController {
 
         return operation;
     }
+
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public List<UserRest> getUsers(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "25") int limit) {
+
+        List<UserRest> users = new ArrayList<>();
+        List<UserDto> usersDto = userService.getUsers(page,limit);
+
+        for (UserDto user : usersDto) {
+            UserRest userEntity = new UserRest();
+            BeanUtils.copyProperties(user,userEntity);
+            users.add(userEntity);
+        }
+
+        return users;
+    }
+
 }
