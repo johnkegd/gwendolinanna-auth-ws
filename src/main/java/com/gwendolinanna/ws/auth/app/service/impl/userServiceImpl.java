@@ -60,7 +60,7 @@ public class userServiceImpl implements UserService {
 
         UserDto userDto = utils.getModelMapper().map(storedUserDetails, UserDto.class);
 
-        return user;
+        return userDto;
     }
 
     @Override

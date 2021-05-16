@@ -1,5 +1,7 @@
 package com.gwendolinanna.ws.auth.app.ui.model.response;
 
+import java.util.List;
+
 /**
  * @author Johnkegd
  */
@@ -8,6 +10,7 @@ public class UserRest {
     private String firstName;
     private String lastName;
     private String email;
+    private List<PostRest> posts;
 
     public String getUserId() {
         return userId;
@@ -41,4 +44,11 @@ public class UserRest {
         this.email = email;
     }
 
+    public List<PostRest> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<PostRest> posts) {
+        this.posts = posts;
+    }
 }
