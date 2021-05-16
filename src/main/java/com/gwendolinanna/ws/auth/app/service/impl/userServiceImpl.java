@@ -5,8 +5,8 @@ import com.gwendolinanna.ws.auth.app.io.repositories.UserRepository;
 import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
 import com.gwendolinanna.ws.auth.app.service.UserService;
 import com.gwendolinanna.ws.auth.app.shared.Utils;
+import com.gwendolinanna.ws.auth.app.shared.dto.PostDto;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
-import com.gwendolinanna.ws.auth.app.ui.model.response.ErrorMessage;
 import com.gwendolinanna.ws.auth.app.ui.model.response.ErrorMessages;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +38,19 @@ public class userServiceImpl implements UserService {
     @Autowired
     Utils utils;
 
+
     @Override
     public UserDto createUser(UserDto user) {
         if (userRepository.findByEmail(user.getEmail()) != null)
             throw new RuntimeException("User already Exists");
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(user, userEntity);
+
+        for (PostDto post : user.getPosts()) {
+            post.setPostId(utils.generatePostId(20));
+            post.setUserDetails(user);
+        }
+
+
+        UserEntity userEntity = utils.getModelMapper().map(user, UserEntity.class);
 
         String publicUserId = utils.generateUserId(30);
         userEntity.setUserId(publicUserId);
@@ -51,9 +58,7 @@ public class userServiceImpl implements UserService {
 
         UserEntity storedUserDetails = userRepository.save(userEntity);
 
-        UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(storedUserDetails, userDto);
-
+        UserDto userDto = utils.getModelMapper().map(storedUserDetails, UserDto.class);
 
         return user;
     }
@@ -65,26 +70,23 @@ public class userServiceImpl implements UserService {
         if (userEntity == null)
             throw new UsernameNotFoundException(email);
 
-        UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(userEntity,userDto);
+        UserDto userDto = utils.getModelMapper().map(userEntity, UserDto.class);
 
         return userDto;
     }
 
     @Override
     public UserDto getUserByUserId(String userId) {
-        UserDto userDto = new UserDto();
         UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null)
             throw new RuntimeException(userId);
 
-        BeanUtils.copyProperties(userEntity,userDto);
+        UserDto userDto = utils.getModelMapper().map(userEntity, UserDto.class);
         return userDto;
     }
 
     @Override
     public UserDto updateUserById(String userId, UserDto user) {
-        UserDto userDto = new UserDto();
         UserEntity userEntity = userRepository.findByUserId(userId);
 
         if (userEntity == null || user.getFirstName().isEmpty() || user.getLastName().isEmpty())
@@ -96,7 +98,7 @@ public class userServiceImpl implements UserService {
         userEntity.setLastName(user.getLastName());
 
         UserEntity updatedUserDetails = userRepository.save(userEntity);
-        BeanUtils.copyProperties(updatedUserDetails,userDto);
+        UserDto userDto = utils.getModelMapper().map(updatedUserDetails,UserDto.class);
 
         return userDto;
     }

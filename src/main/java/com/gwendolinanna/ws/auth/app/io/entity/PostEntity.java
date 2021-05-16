@@ -1,26 +1,51 @@
-package com.gwendolinanna.ws.auth.app.shared.dto;
+package com.gwendolinanna.ws.auth.app.io.entity;
 
 import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * @author Johnkegd
  */
-public class PostDto implements Serializable {
+@Entity(name="posts")
+public class PostEntity implements Serializable {
+    private static final long serialVersionUID = 6541231554545L;
 
-    private static final long serialVersionUID = 6546543515564L;
+    @Id
+    @GeneratedValue
     private long id;
+
+    @Column(length = 30, nullable = false)
     private String postId;
+
+    @Column(length = 40, nullable = false)
     private String title;
+
+    @Column(length = 250)
     private String description;
+
+    @Column(nullable = false)
     private String image;
+
+    @Column(nullable = false)
     private String icon;
     private String category;
     private int price;
-    private UserDto userDetails;
 
+    @ManyToOne
+    @JoinColumn(name="users_id")
+    private UserEntity userDetails;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getPostId() {
@@ -29,14 +54,6 @@ public class PostDto implements Serializable {
 
     public void setPostId(String postId) {
         this.postId = postId;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -87,11 +104,11 @@ public class PostDto implements Serializable {
         this.price = price;
     }
 
-    public UserDto getUserDetails() {
+    public UserEntity getUserDetails() {
         return userDetails;
     }
 
-    public void setUserDetails(UserDto userDetails) {
+    public void setUserDetails(UserEntity userDetails) {
         this.userDetails = userDetails;
     }
 }

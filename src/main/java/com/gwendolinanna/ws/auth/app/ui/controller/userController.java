@@ -3,14 +3,13 @@ package com.gwendolinanna.ws.auth.app.ui.controller;
 import com.gwendolinanna.ws.auth.app.exceptions.UserServiceException;
 import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
 import com.gwendolinanna.ws.auth.app.service.UserService;
+import com.gwendolinanna.ws.auth.app.shared.Utils;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 import com.gwendolinanna.ws.auth.app.ui.model.request.UserDetailsRequestModel;
 import com.gwendolinanna.ws.auth.app.ui.model.response.ErrorMessages;
 import com.gwendolinanna.ws.auth.app.ui.model.response.OperationStatusModel;
 import com.gwendolinanna.ws.auth.app.ui.model.response.RequestOperationStatus;
 import com.gwendolinanna.ws.auth.app.ui.model.response.UserRest;
-
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -37,6 +36,9 @@ public class userController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    Utils utils;
+
     @GetMapping(path = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public UserRest getUser(@PathVariable String id) {
@@ -52,18 +54,13 @@ public class userController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) throws Exception {
-        UserRest returnValue = new UserRest();
-
-        if(userDetails.getFirstName().isEmpty())
+        if (userDetails.getFirstName().isEmpty())
             throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
 
-//        UserDto userDto = new UserDto();
-//        BeanUtils.copyProperties(userDetails,userDto);
-        ModelMapper modelMapper = new ModelMapper();
-        UserDto userDto = modelMapper.map(userDetails, UserDto.class);
+        UserDto userDto = utils.getModelMapper().map(userDetails, UserDto.class);
 
         UserDto createdUser = userService.createUser(userDto);
-        BeanUtils.copyProperties(createdUser, returnValue);
+        UserRest returnValue = utils.getModelMapper().map(createdUser, UserRest.class);
 
         return returnValue;
     }
@@ -72,13 +69,12 @@ public class userController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public UserRest updateUser(@PathVariable String id, @RequestBody UserDetailsRequestModel userDetails) {
-        UserRest userRest = new UserRest();
 
-        UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(userDetails, userDto);
+        UserDto userDto = utils.getModelMapper().map(userDetails, UserDto.class);
 
         UserDto updateUser = userService.updateUserById(id, userDto);
-        BeanUtils.copyProperties(updateUser,userRest);
+
+        UserRest userRest = utils.getModelMapper().map(updateUser, UserRest.class);
 
         if (updateUser == null)
             throw new RuntimeException(ErrorMessages.COULD_NOT_UPDATE_RECORD.getErrorMessage());
@@ -109,9 +105,8 @@ public class userController {
         List<UserDto> usersDto = userService.getUsers(page,limit);
 
         for (UserDto user : usersDto) {
-            UserRest userEntity = new UserRest();
-            BeanUtils.copyProperties(user,userEntity);
-            users.add(userEntity);
+            UserRest userRest = utils.getModelMapper().map(user, UserRest.class);
+            users.add(userRest);
         }
 
         return users;

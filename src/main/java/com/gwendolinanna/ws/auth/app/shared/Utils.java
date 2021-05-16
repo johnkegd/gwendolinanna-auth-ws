@@ -1,5 +1,6 @@
 package com.gwendolinanna.ws.auth.app.shared;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -14,9 +15,13 @@ public class Utils {
     private final String ALPHABET = "0123456789ABCDFEHIJKLMNOPQRSTUVWXYZabcdfehijklmnopqrstuvwzyz";
     private final int ITERATIONS = 10000;
     private final int KEY_LENGTH = 256;
+    private ModelMapper modelMapper = new ModelMapper();
 
     public String generateUserId(int length) {
-        return generateRandomString(length);
+        return "user".concat(generateRandomString(length));
+    }
+    public String generatePostId(int length) {
+        return "post".concat(generateRandomString(length));
     }
 
     private String generateRandomString(int length) {
@@ -28,4 +33,7 @@ public class Utils {
         return new String(resultValue);
     }
 
+    public ModelMapper getModelMapper() {
+        return modelMapper;
+    }
 }
