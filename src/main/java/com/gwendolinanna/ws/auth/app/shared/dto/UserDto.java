@@ -1,6 +1,7 @@
 package com.gwendolinanna.ws.auth.app.shared.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Johnkegd
@@ -16,6 +17,15 @@ public class UserDto implements Serializable {
     private String encryptedPassword;
     private String emailVerificationToken;
     private boolean emailVerificationStatus;
+    private List<PostDto> posts;
+
+    public List<PostDto> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<PostDto> posts) {
+        this.posts = posts;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

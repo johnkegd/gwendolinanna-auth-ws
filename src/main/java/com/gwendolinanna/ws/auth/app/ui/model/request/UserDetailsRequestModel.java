@@ -1,6 +1,8 @@
 package com.gwendolinanna.ws.auth.app.ui.model.request;
 
 
+import java.util.List;
+
 /**
  * @author Johnkegd
  */
@@ -10,7 +12,15 @@ public class UserDetailsRequestModel {
     private String lastName;
     private String email;
     private String password;
+    private List<PostRequestModel> posts;
 
+    public List<PostRequestModel> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<PostRequestModel> posts) {
+        this.posts = posts;
+    }
 
     public String getFirstName() {
         return firstName;
