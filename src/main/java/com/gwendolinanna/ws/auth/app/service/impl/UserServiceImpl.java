@@ -1,6 +1,7 @@
 package com.gwendolinanna.ws.auth.app.service.impl;
 
 import com.gwendolinanna.ws.auth.app.exceptions.UserServiceException;
+import com.gwendolinanna.ws.auth.app.io.entity.PostEntity;
 import com.gwendolinanna.ws.auth.app.io.repositories.UserRepository;
 import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
 import com.gwendolinanna.ws.auth.app.service.UserService;
@@ -8,6 +9,9 @@ import com.gwendolinanna.ws.auth.app.shared.Utils;
 import com.gwendolinanna.ws.auth.app.shared.dto.PostDto;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 import com.gwendolinanna.ws.auth.app.ui.model.response.ErrorMessages;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,8 +30,9 @@ import javax.transaction.Transactional;
  * @author Johnkegd
  */
 @Service
-public class userServiceImpl implements UserService {
+public class UserServiceImpl implements UserService {
 
+    private Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
     @Autowired
     UserRepository userRepository;
 

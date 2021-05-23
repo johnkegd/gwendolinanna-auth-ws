@@ -131,4 +131,11 @@ public class userController {
         return posts;
     }
 
+    @GetMapping(path = "/{userId}/posts/{postId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public PostRest getPost(@PathVariable String postId) {
+        PostDto postDto = postService.getPost(postId);
+
+        return utils.getModelMapper().map(postDto, PostRest.class);
+    }
+
 }

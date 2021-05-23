@@ -46,7 +46,6 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "userDetails", cascade = CascadeType.ALL)
     private List<PostEntity> posts;
 
-
     public void setId(Long id) {
         this.id = id;
     }

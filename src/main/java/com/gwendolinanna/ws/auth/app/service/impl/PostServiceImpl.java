@@ -34,7 +34,7 @@ public class PostServiceImpl implements PostService {
         List<PostDto> postDtoList = new ArrayList<>();
         UserEntity userEntity = userRepository.findByUserId(userId);
 
-        if (userEntity == null ) {
+        if (userEntity == null) {
             return postDtoList;
         }
 
@@ -44,5 +44,16 @@ public class PostServiceImpl implements PostService {
         }
 
         return postDtoList;
+    }
+
+    @Override
+    public PostDto getPost(String postId) {
+        PostEntity postEntity = postRepository.findByPostId(postId);
+
+        if (postEntity != null) {
+            return utils.getModelMapper().map(postEntity, PostDto.class);
+        }
+
+        return null;
     }
 }

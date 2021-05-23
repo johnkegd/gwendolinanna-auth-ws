@@ -9,4 +9,6 @@ import java.util.List;
 public interface PostService {
 
     List<PostDto> getPosts(String userId);
+
+    PostDto getPost(String postId);
 }

@@ -5,18 +5,22 @@ import com.gwendolinanna.ws.auth.app.SpringApplicationContext;
 import com.gwendolinanna.ws.auth.app.service.UserService;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 import com.gwendolinanna.ws.auth.app.ui.model.request.UserLoginRequestModel;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import sun.rmi.runtime.Log;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -29,6 +33,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
  */
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationFilter.class);
 
     public AuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -52,7 +57,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain,
-                                            Authentication authResult) throws IOException, ServletException {
+                                            Authentication authResult) {
 
         String userName = ((User) authResult.getPrincipal()).getUsername();
         //String tokenSecurity = new SecurityConstans().getTokenSecret();
@@ -63,7 +68,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret()).compact();
 
         UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
-        UserDto userDto = userService.getUserByEmail(userName);
+        UserDto userDto = new UserDto();
+        try {
+            userDto = userService.getUserByEmail(userName);
+            LOGGER.info(userDto.getUserId());
+        } catch (Exception e) {
+            LOGGER.error("error auth", e);
+
+        }
 
 
         response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
