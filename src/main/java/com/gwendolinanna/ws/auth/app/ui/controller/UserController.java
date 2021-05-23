@@ -139,8 +139,22 @@ public class UserController {
         PostRest postRest = utils.getModelMapper().map(postDto, PostRest.class);
 
         Link userLink = WebMvcLinkBuilder.linkTo(UserController.class).slash(userId).withRel("user");
-        postRest.add(userLink);
+        Link userPostsLink = WebMvcLinkBuilder.linkTo(UserController.class)
+                .slash(userId)
+                .slash("posts")
+                .withRel("posts");
+        Link selfLink = WebMvcLinkBuilder.linkTo(UserController.class)
+                .slash(userId)
+                .slash("posts")
+                .slash(postId)
+                .withSelfRel();
 
+        postRest
+                .add(userLink)
+                .add(userPostsLink)
+                .add(selfLink);
+
+        
         return postRest;
     }
 
