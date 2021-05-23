@@ -15,6 +15,8 @@ import com.gwendolinanna.ws.auth.app.ui.model.response.UserRest;
 
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +37,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("users")
-public class userController {
+public class UserController {
 
     @Autowired
     UserService userService;
@@ -132,10 +134,14 @@ public class userController {
     }
 
     @GetMapping(path = "/{userId}/posts/{postId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public PostRest getPost(@PathVariable String postId) {
+    public PostRest getPost(@PathVariable String userId ,@PathVariable String postId) {
         PostDto postDto = postService.getPost(postId);
+        PostRest postRest = utils.getModelMapper().map(postDto, PostRest.class);
 
-        return utils.getModelMapper().map(postDto, PostRest.class);
+        Link userLink = WebMvcLinkBuilder.linkTo(UserController.class).slash(userId).withRel("user");
+        postRest.add(userLink);
+
+        return postRest;
     }
 
 }
