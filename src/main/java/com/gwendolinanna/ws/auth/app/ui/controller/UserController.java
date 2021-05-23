@@ -15,6 +15,8 @@ import com.gwendolinanna.ws.auth.app.ui.model.response.UserRest;
 
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.MediaType;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -120,42 +123,49 @@ public class UserController {
         return users;
     }
 
-    @GetMapping(path = "/{id}/posts", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public List<PostRest> getPosts(@PathVariable String id) {
+    @GetMapping(path = "/{userId}/posts", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public CollectionModel<PostRest> getUserPosts(@PathVariable String userId) {
         List<PostRest> posts = new ArrayList<>();
-        List<PostDto> postDto = postService.getPosts(id);
+        List<PostDto> postDto = postService.getPosts(userId);
 
         if (postDto != null && !postDto.isEmpty()) {
             Type listType = new TypeToken<List<PostRest>>() {}.getType();
             posts = utils.getModelMapper().map(postDto, listType);
         }
 
-        return posts;
+        Link userLink = WebMvcLinkBuilder.linkTo(UserController.class)
+                .slash(userId)
+                .withRel("user");
+
+        Link selfLink = WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder
+                        .methodOn(UserController.class)
+                        .getUserPosts(userId)).withSelfRel();
+
+        return CollectionModel.of(posts, userLink, selfLink);
     }
 
-    @GetMapping(path = "/{userId}/posts/{postId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public PostRest getPost(@PathVariable String userId ,@PathVariable String postId) {
+    @GetMapping(path = "/{userId}/posts/{postId}", produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE
+    })
+    public EntityModel<PostRest> getUserPost(@PathVariable String userId ,@PathVariable String postId) {
         PostDto postDto = postService.getPost(postId);
         PostRest postRest = utils.getModelMapper().map(postDto, PostRest.class);
 
-        Link userLink = WebMvcLinkBuilder.linkTo(UserController.class).slash(userId).withRel("user");
-        Link userPostsLink = WebMvcLinkBuilder.linkTo(UserController.class)
+        Link userLink = WebMvcLinkBuilder.linkTo(UserController.class)
                 .slash(userId)
-                .slash("posts")
-                .withRel("posts");
-        Link selfLink = WebMvcLinkBuilder.linkTo(UserController.class)
-                .slash(userId)
-                .slash("posts")
-                .slash(postId)
-                .withSelfRel();
+                .withRel("user");
 
-        postRest
-                .add(userLink)
-                .add(userPostsLink)
-                .add(selfLink);
+        Link userPostsLink = WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder
+                        .methodOn(UserController.class)
+                        .getUserPosts(userId)).withRel("posts");
 
-        
-        return postRest;
+        Link selfLink = WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder
+                        .methodOn(UserController.class).getUserPost(userId, postId)).withSelfRel();
+
+        return EntityModel.of(postRest, Arrays.asList(userLink,userPostsLink,selfLink));
     }
 
 }

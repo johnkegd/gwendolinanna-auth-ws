@@ -1,11 +1,9 @@
 package com.gwendolinanna.ws.auth.app.ui.model.response;
 
-import org.springframework.hateoas.RepresentationModel;
-
 /**
  * @author Johnkegd
  */
-public class PostRest extends RepresentationModel<PostRest> {
+public class PostRest {
     private String postId;
     private String title;
     private String description;
