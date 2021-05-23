@@ -8,7 +8,6 @@ import com.gwendolinanna.ws.auth.app.shared.Utils;
 import com.gwendolinanna.ws.auth.app.shared.dto.PostDto;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 import com.gwendolinanna.ws.auth.app.ui.model.response.ErrorMessages;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -124,8 +123,7 @@ public class userServiceImpl implements UserService {
         List<UserEntity> users = usersPage.getContent();
 
         for (UserEntity userEntity : users) {
-            UserDto userDto = new UserDto();
-            BeanUtils.copyProperties(userEntity, userDto);
+            UserDto userDto = utils.getModelMapper().map(userEntity,UserDto.class);
             usersDto.add(userDto);
         }
 
@@ -139,7 +137,7 @@ public class userServiceImpl implements UserService {
         if (userEntity == null)
             throw  new UsernameNotFoundException(email);
 
-        return new User(userEntity.getEmail(),userEntity.getEncryptedPassword(),new ArrayList<>());
+        return new User(userEntity.getEmail(),userEntity.getEncryptedPassword(), new ArrayList<>());
     }
 
 }

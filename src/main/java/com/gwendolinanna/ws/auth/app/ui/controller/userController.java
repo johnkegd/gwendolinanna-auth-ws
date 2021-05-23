@@ -1,16 +1,19 @@
 package com.gwendolinanna.ws.auth.app.ui.controller;
 
 import com.gwendolinanna.ws.auth.app.exceptions.UserServiceException;
-import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
+import com.gwendolinanna.ws.auth.app.service.PostService;
 import com.gwendolinanna.ws.auth.app.service.UserService;
 import com.gwendolinanna.ws.auth.app.shared.Utils;
+import com.gwendolinanna.ws.auth.app.shared.dto.PostDto;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 import com.gwendolinanna.ws.auth.app.ui.model.request.UserDetailsRequestModel;
 import com.gwendolinanna.ws.auth.app.ui.model.response.ErrorMessages;
 import com.gwendolinanna.ws.auth.app.ui.model.response.OperationStatusModel;
+import com.gwendolinanna.ws.auth.app.ui.model.response.PostRest;
 import com.gwendolinanna.ws.auth.app.ui.model.response.RequestOperationStatus;
 import com.gwendolinanna.ws.auth.app.ui.model.response.UserRest;
-import org.springframework.beans.BeanUtils;
+
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,15 +41,17 @@ public class userController {
     UserService userService;
 
     @Autowired
+    PostService postService;
+
+    @Autowired
     Utils utils;
 
     @GetMapping(path = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public UserRest getUser(@PathVariable String id) {
-        UserRest userRest = new UserRest();
 
         UserDto userDto = userService.getUserByUserId(id);
-        BeanUtils.copyProperties(userDto, userRest);
+        UserRest userRest = utils.getModelMapper().map(userDto, UserRest.class);
 
         return userRest;
     }
@@ -110,6 +116,19 @@ public class userController {
         }
 
         return users;
+    }
+
+    @GetMapping(path = "/{id}/posts", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public List<PostRest> getPosts(@PathVariable String id) {
+        List<PostRest> posts = new ArrayList<>();
+        List<PostDto> postDto = postService.getPosts(id);
+
+        if (postDto != null && !postDto.isEmpty()) {
+            Type listType = new TypeToken<List<PostRest>>() {}.getType();
+            posts = utils.getModelMapper().map(postDto, listType);
+        }
+
+        return posts;
     }
 
 }
