@@ -131,6 +131,14 @@ public class UserController {
         if (postDto != null && !postDto.isEmpty()) {
             Type listType = new TypeToken<List<PostRest>>() {}.getType();
             posts = utils.getModelMapper().map(postDto, listType);
+
+            for (PostRest postRest : posts) {
+                Link postLink = WebMvcLinkBuilder.linkTo(
+                        WebMvcLinkBuilder.methodOn(UserController.class)
+                                .getUserPost(userId, postRest.getPostId())).withSelfRel();
+                postRest.add(postLink);
+            }
+
         }
 
         Link userLink = WebMvcLinkBuilder.linkTo(UserController.class)
