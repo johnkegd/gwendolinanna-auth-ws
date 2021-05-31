@@ -80,6 +80,13 @@
 			<version>2.4.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-ses</artifactId>
+			<version>1.11.1030</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
