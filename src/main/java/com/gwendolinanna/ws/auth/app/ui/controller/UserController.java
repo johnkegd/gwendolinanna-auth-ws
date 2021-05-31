@@ -176,4 +176,20 @@ public class UserController {
         return EntityModel.of(postRest, Arrays.asList(userLink,userPostsLink,selfLink));
     }
 
+    public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
+        OperationStatusModel operationStatus = new OperationStatusModel();
+        operationStatus.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
+
+        boolean isVerified = userService.verifyEmailToken(token);
+
+        if (isVerified) {
+            operationStatus.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } else {
+            operationStatus.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+
+
+        return operationStatus;
+    }
+
 }

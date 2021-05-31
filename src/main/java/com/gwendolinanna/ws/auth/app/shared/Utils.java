@@ -1,10 +1,16 @@
 package com.gwendolinanna.ws.auth.app.shared;
 
+import com.gwendolinanna.ws.auth.app.security.SecurityConstants;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
+import java.util.Date;
 import java.util.Random;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 
 /**
  * @author Johnkegd
@@ -35,5 +41,15 @@ public class Utils {
 
     public ModelMapper getModelMapper() {
         return modelMapper;
+    }
+
+    public boolean hasTokenExpired(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(SecurityConstants.getTokenSecret())
+                .parseClaimsJws(token).getBody();
+        Date tokenExpirationDate = claims.getExpiration();
+        Date todayDate = new Date();
+
+        return tokenExpirationDate.before(todayDate);
     }
 }

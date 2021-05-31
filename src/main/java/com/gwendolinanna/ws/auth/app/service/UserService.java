@@ -16,5 +16,6 @@ public interface UserService extends UserDetailsService {
     UserDto updateUserById(String userId, UserDto user);
     void deleteUserById(String userId);
     List<UserDto> getUsers(int page, int limit);
+    boolean verifyEmailToken(String token);
 
 }
