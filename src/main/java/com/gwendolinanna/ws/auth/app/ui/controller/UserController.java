@@ -176,6 +176,7 @@ public class UserController {
         return EntityModel.of(postRest, Arrays.asList(userLink,userPostsLink,selfLink));
     }
 
+    @GetMapping(path = "/users/email-verification/{token}")
     public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
         OperationStatusModel operationStatus = new OperationStatusModel();
         operationStatus.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
