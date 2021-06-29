@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -59,6 +60,7 @@ public class UserServiceImpl implements UserService {
         String publicUserId = utils.generateUserId(30);
         userEntity.setUserId(publicUserId);
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userEntity.setEmailVerificationToken(utils.generateEmailVerificationToken(publicUserId));
 
         UserEntity storedUserDetails = userRepository.save(userEntity);
 
@@ -162,7 +164,12 @@ public class UserServiceImpl implements UserService {
         if (userEntity == null)
             throw  new UsernameNotFoundException(email);
 
-        return new User(userEntity.getEmail(),userEntity.getEncryptedPassword(), new ArrayList<>());
+
+        return new User(userEntity.getEmail(),
+                userEntity.getEncryptedPassword(),
+                userEntity.getEmailVerificationStatus(),
+                true, true, true,
+                new ArrayList<>());
     }
 
 }
