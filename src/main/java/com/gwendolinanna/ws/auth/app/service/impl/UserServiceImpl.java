@@ -5,6 +5,7 @@ import com.gwendolinanna.ws.auth.app.io.entity.PostEntity;
 import com.gwendolinanna.ws.auth.app.io.repositories.UserRepository;
 import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
 import com.gwendolinanna.ws.auth.app.service.UserService;
+import com.gwendolinanna.ws.auth.app.shared.AmazonSES;
 import com.gwendolinanna.ws.auth.app.shared.Utils;
 import com.gwendolinanna.ws.auth.app.shared.dto.PostDto;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
@@ -66,6 +67,8 @@ public class UserServiceImpl implements UserService {
 
         UserDto userDto = utils.getModelMapper().map(storedUserDetails, UserDto.class);
 
+
+        new AmazonSES().verifiyEmail(userDto);
         return userDto;
     }
 
