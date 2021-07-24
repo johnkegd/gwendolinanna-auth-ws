@@ -65,7 +65,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         UserDto userDto = new UserDto();
         try {
             userDto = userService.getUserByEmail(userName);
-            LOGGER.info(userDto.getUserId());
         } catch (Exception e) {
             LOGGER.error("error auth", e);
 
@@ -73,6 +72,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 
         response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-        response.addHeader("UserID",userDto.getUserId());
+        response.addHeader("UserID", userDto.getUserId());
     }
 }

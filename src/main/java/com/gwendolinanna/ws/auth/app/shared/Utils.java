@@ -25,10 +25,10 @@ public class Utils {
     private ModelMapper modelMapper = new ModelMapper();
 
     public String generateUserId(int length) {
-        return "user".concat(generateRandomString(length));
+        return generateRandomString(length);
     }
     public String generatePostId(int length) {
-        return "post".concat(generateRandomString(length));
+        return generateRandomString(length);
     }
 
     private String generateRandomString(int length) {

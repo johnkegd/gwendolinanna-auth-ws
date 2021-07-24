@@ -78,9 +78,12 @@ public class UserServiceImpl implements UserService {
 
         if (userEntity == null)
             throw new UsernameNotFoundException(email);
-
-        UserDto userDto = utils.getModelMapper().map(userEntity, UserDto.class);
-
+        UserDto userDto = null;
+        try {
+            userDto = utils.getModelMapper().map(userEntity, UserDto.class);
+        } catch (Exception e) {
+            LOGGER.error("UserService getUserByEmail error:", e);
+        }
         return userDto;
     }
 
