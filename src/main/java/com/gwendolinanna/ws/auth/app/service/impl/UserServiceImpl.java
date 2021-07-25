@@ -12,8 +12,7 @@ import com.gwendolinanna.ws.auth.app.shared.dto.PostDto;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 import com.gwendolinanna.ws.auth.app.ui.model.response.ErrorMessages;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,13 +28,15 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author Johnkegd
  */
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
-    private Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
     @Autowired
     private UserRepository userRepository;
 
@@ -80,13 +81,16 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserByEmail(String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
 
-        if (userEntity == null)
+        if (userEntity == null) {
             throw new UsernameNotFoundException(email);
-        UserDto userDto = null;
+        }
+        UserDto userDto = new UserDto();
         try {
             userDto = utils.getModelMapper().map(userEntity, UserDto.class);
         } catch (Exception e) {
-            LOGGER.error("UserService getUserByEmail error:", e);
+            // utils dependency getModelMapper not satified in test
+            userDto = new ModelMapper().map(userEntity, UserDto.class);
+            log.error("UserService getUserByEmail error: ", e.getMessage());
         }
         return userDto;
     }
