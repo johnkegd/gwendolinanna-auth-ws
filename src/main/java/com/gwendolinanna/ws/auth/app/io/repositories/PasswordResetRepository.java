@@ -8,4 +8,6 @@ import org.springframework.data.repository.CrudRepository;
  * @author Johnkegd
  */
 public interface PasswordResetRepository extends CrudRepository<PasswordResetTokenEntity, Long> {
+
+    PasswordResetTokenEntity findByToken(String token);
 }

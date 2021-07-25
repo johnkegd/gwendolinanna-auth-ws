@@ -184,6 +184,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean resetPassword(String token, String password) {
+        boolean passwordRenewed = false;
+        PasswordResetTokenEntity passwordEntity = passwordResetRepository.findByToken(token);
+        if (!utils.hasTokenExpired(token) && passwordEntity != null) {
+            UserEntity userEntity = passwordEntity.getUserDetails();
+            userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(password));
+            UserEntity savedEntity = userRepository.save(userEntity);
+            if (savedEntity != null && savedEntity.getEncryptedPassword().equalsIgnoreCase(userEntity.getEncryptedPassword())) {
+                passwordRenewed = true;
+            }
+        }
+        passwordResetRepository.delete(passwordEntity);
+        return passwordRenewed;
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByEmail(email);
 

@@ -6,6 +6,7 @@ import com.gwendolinanna.ws.auth.app.service.UserService;
 import com.gwendolinanna.ws.auth.app.shared.Utils;
 import com.gwendolinanna.ws.auth.app.shared.dto.PostDto;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
+import com.gwendolinanna.ws.auth.app.ui.model.request.PasswordResetModel;
 import com.gwendolinanna.ws.auth.app.ui.model.request.PasswordResetRequestModel;
 import com.gwendolinanna.ws.auth.app.ui.model.request.UserDetailsRequestModel;
 import com.gwendolinanna.ws.auth.app.ui.model.response.ErrorMessages;
@@ -196,10 +197,10 @@ public class UserController {
         return operationStatus;
     }
 
-    @PostMapping(path = "/password-reset",
+    @PostMapping(path = "/password-reset-request",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public OperationStatusModel passwordReset(@RequestBody PasswordResetRequestModel passwordResetRequest) {
+    public OperationStatusModel passwordResetRequest(@RequestBody PasswordResetRequestModel passwordResetRequest) {
         OperationStatusModel operationResponse = new OperationStatusModel();
 
         boolean operationResult = userService.requestPasswordReset(passwordResetRequest.getEmail());
@@ -213,5 +214,25 @@ public class UserController {
         }
 
         return operationResponse;
+    }
+
+    @PostMapping(path = "/password-reset",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public OperationStatusModel resetPassword(@RequestBody PasswordResetModel passwordResetModel) {
+        OperationStatusModel operationStatus = new OperationStatusModel();
+
+        boolean operationResult = userService.resetPassword(
+                passwordResetModel.getToken(),
+                passwordResetModel.getPassword());
+        operationStatus.setOperationName(RequestOperationName.PASSWORD_RESET.name());
+
+        if (operationResult) {
+            operationStatus.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } else {
+            operationStatus.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+
+        return operationStatus;
     }
 }
