@@ -8,9 +8,9 @@ import com.amazonaws.services.simpleemail.model.Content;
 import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
+import com.amazonaws.services.simpleemail.model.SendEmailResult;
+import com.gwendolinanna.ws.auth.app.shared.dto.EmailTemplate;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
-
-import java.io.IOException;
 
 /**
  * @author Johnkegd
@@ -46,38 +46,70 @@ public class AmazonSES {
             + "http:/localhost:8080/verification-service/email-verification.html?token=$tokenValue";
 
 
-    public static void verifiyEmail(UserDto userDto)  {
+    public static void verifiyEmail(UserDto userDto) {
+        String htmlBodytWithToken = HTMLBODY.replace("$tokenValue", userDto.getEmailVerificationToken());
+        String textBodyWithToken = TEXTBODY.replace("$tokenValue", userDto.getEmailVerificationToken());
 
+        EmailTemplate emailTemplate = new EmailTemplate();
+
+        emailTemplate.setEmailRecipient(userDto.getEmail());
+        emailTemplate.setSubject(SUBJECT);
+        emailTemplate.setEmailSender(FROM);
+        emailTemplate.setTextBody(textBodyWithToken);
+        emailTemplate.setHtmlBody(htmlBodytWithToken);
+        emailTemplate.setRegion(Regions.EU_WEST_1);
+
+        sendEmail(emailTemplate);
+
+    }
+
+    public static boolean sendPasswordResetRequest(UserDto userDto) {
+        EmailTemplate emailTemplate = new EmailTemplate();
+
+        emailTemplate.setEmailRecipient(userDto.getEmail());
+        emailTemplate.setEmailSender(FROM);
+        emailTemplate.setSubject("Password reset");
+        emailTemplate.setRegion(Regions.EU_WEST_1);
+
+        return sendEmail(emailTemplate);
+    }
+
+    private static boolean sendEmail(EmailTemplate emailTemplate) {
         try {
             AmazonSimpleEmailService client =
                     AmazonSimpleEmailServiceClientBuilder.standard()
                             // Replace US_WEST_2 with the AWS Region you're using for
                             // Amazon SES.
-                            .withRegion(Regions.EU_WEST_1).build();
-
-            String htmlBodytWithToken = HTMLBODY.replace("$tokenValue", userDto.getEmailVerificationToken());
-            String textBodyWithToken = TEXTBODY.replace("$tokenValue", userDto.getEmailVerificationToken());
+                            .withRegion(emailTemplate.getRegion()).build();
 
             SendEmailRequest request = new SendEmailRequest()
                     .withDestination(
-                            new Destination().withToAddresses(userDto.getEmail()))
+                            new Destination().withToAddresses(emailTemplate.getEmailRecipient()))
                     .withMessage(new Message()
                             .withBody(new Body()
                                     .withHtml(new Content()
-                                            .withCharset("UTF-8").withData(htmlBodytWithToken))
+                                            .withCharset("UTF-8").withData(emailTemplate.getHtmlBody()))
                                     .withText(new Content()
-                                            .withCharset("UTF-8").withData(textBodyWithToken)))
+                                            .withCharset("UTF-8").withData(emailTemplate.getTextBody())))
                             .withSubject(new Content()
-                                    .withCharset("UTF-8").withData(SUBJECT)))
-                    .withSource(FROM);
-                    // Comment or remove the next line if you are not using a
-                    // configuration set
-                   // .withConfigurationSetName(CONFIGSET);
-            client.sendEmail(request);
-            System.out.println("Email sent!");
-        } catch (Exception ex) {
+                                    .withCharset("UTF-8").withData(emailTemplate.getSubject())))
+                    .withSource(emailTemplate.getEmailSender());
+            // Comment or remove the next line if you are not using a
+            // configuration set
+            // .withConfigurationSetName(CONFIGSET);
+
+            SendEmailResult result = client.sendEmail(request);
+
+            if (result != null && (result.getMessageId() != null && !result.getMessageId().isEmpty())) {
+                System.out.println("Email sent!");
+                return true;
+            }
+        } catch (Exception e) {
             System.out.println("The email was not sent. Error message: "
-                    + ex.getMessage());
+                    + e.getMessage());
+            return false;
         }
+        return false;
     }
+
 }

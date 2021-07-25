@@ -1,9 +1,10 @@
 package com.gwendolinanna.ws.auth.app.service.impl;
 
 import com.gwendolinanna.ws.auth.app.exceptions.UserServiceException;
-import com.gwendolinanna.ws.auth.app.io.entity.PostEntity;
-import com.gwendolinanna.ws.auth.app.io.repositories.UserRepository;
+import com.gwendolinanna.ws.auth.app.io.entity.PasswordResetTokenEntity;
 import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
+import com.gwendolinanna.ws.auth.app.io.repositories.PasswordResetRepository;
+import com.gwendolinanna.ws.auth.app.io.repositories.UserRepository;
 import com.gwendolinanna.ws.auth.app.service.UserService;
 import com.gwendolinanna.ws.auth.app.shared.AmazonSES;
 import com.gwendolinanna.ws.auth.app.shared.Utils;
@@ -17,12 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,13 +37,16 @@ public class UserServiceImpl implements UserService {
 
     private Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    Utils utils;
+    private PasswordResetRepository passwordResetRepository;
+
+    @Autowired
+    private Utils utils;
 
 
     @Override
@@ -110,7 +114,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setLastName(user.getLastName());
 
         UserEntity updatedUserDetails = userRepository.save(userEntity);
-        UserDto userDto = utils.getModelMapper().map(updatedUserDetails,UserDto.class);
+        UserDto userDto = utils.getModelMapper().map(updatedUserDetails, UserDto.class);
 
         return userDto;
     }
@@ -119,7 +123,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(String userId) {
         UserEntity userEntity = userRepository.findByUserId(userId);
-        if(userEntity == null)
+        if (userEntity == null)
             throw new UsernameNotFoundException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
 
         userRepository.delete(userEntity);
@@ -136,7 +140,7 @@ public class UserServiceImpl implements UserService {
         List<UserEntity> users = usersPage.getContent();
 
         for (UserEntity userEntity : users) {
-            UserDto userDto = utils.getModelMapper().map(userEntity,UserDto.class);
+            UserDto userDto = utils.getModelMapper().map(userEntity, UserDto.class);
             usersDto.add(userDto);
         }
 
@@ -162,11 +166,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean requestPasswordReset(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+
+        if (userEntity != null) {
+            String token = utils.generatePasswordToken(userEntity.getUserId());
+            PasswordResetTokenEntity passwordResetTokenEntity = new PasswordResetTokenEntity();
+            passwordResetTokenEntity.setToken(token);
+            passwordResetTokenEntity.setUserDetails(userEntity);
+            passwordResetRepository.save(passwordResetTokenEntity);
+            //skip amaxon SES
+            return true;
+            //return AmazonSES.sendPasswordResetRequest(new UserDto(userEntity.getFirstName(), userEntity.getEmail(), token));
+        }
+
+        return false;
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByEmail(email);
 
         if (userEntity == null)
-            throw  new UsernameNotFoundException(email);
+            throw new UsernameNotFoundException(email);
 
 
         return new User(userEntity.getEmail(),

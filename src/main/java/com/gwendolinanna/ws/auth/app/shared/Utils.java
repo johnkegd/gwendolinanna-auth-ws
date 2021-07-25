@@ -27,6 +27,7 @@ public class Utils {
     public String generateUserId(int length) {
         return generateRandomString(length);
     }
+
     public String generatePostId(int length) {
         return generateRandomString(length);
     }
@@ -34,7 +35,7 @@ public class Utils {
     private String generateRandomString(int length) {
         StringBuilder resultValue = new StringBuilder(length);
 
-        for(int i=0; i < length; i++) {
+        for (int i = 0; i < length; i++) {
             resultValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
         }
         return new String(resultValue);
@@ -55,11 +56,18 @@ public class Utils {
     }
 
     public String generateEmailVerificationToken(String userId) {
-        String token = Jwts.builder()
+        return tokenGeneration(userId, SecurityConstants.EXPIRATION_TIME);
+    }
+
+    public String generatePasswordToken(String userId) {
+        return tokenGeneration(userId, SecurityConstants.PASSWORD_RESET_EXPIRATION_TIME);
+    }
+
+    private String tokenGeneration(String userId, long expirationTime) {
+        return Jwts.builder()
                 .setSubject(userId)
-                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret())
                 .compact();
-        return token;
     }
 }

@@ -1,6 +1,7 @@
 package com.gwendolinanna.ws.auth.app.security;
 
 import com.gwendolinanna.ws.auth.app.service.UserService;
+
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,15 +22,14 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests().
-        antMatchers(HttpMethod.POST, SecurityConstants.SING_UP_URL)
-                .permitAll()
-                .antMatchers(HttpMethod.GET, SecurityConstants.VERIFICATION_EMAIL_URL)
-                .permitAll()
-                .anyRequest()
-                .authenticated().and()
+                antMatchers(HttpMethod.POST, SecurityConstants.SING_UP_URL).permitAll()
+                .antMatchers(HttpMethod.GET, SecurityConstants.VERIFICATION_EMAIL_URL).permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL).permitAll()
+                .anyRequest().authenticated().and()
                 .addFilter(getAuthenticationFilter())
                 .addFilter(new AuthorizationFilter(authenticationManager()))
                 .sessionManagement()
@@ -37,7 +37,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(AuthenticationManagerBuilder amb)throws Exception {
+    public void configure(AuthenticationManagerBuilder amb) throws Exception {
         amb.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 

@@ -19,6 +19,15 @@ public class UserDto implements Serializable {
     private boolean emailVerificationStatus;
     private List<PostDto> posts;
 
+    public UserDto() {
+    }
+
+    public UserDto(String firstName, String email, String encryptedPassword) {
+        this.firstName = firstName;
+        this.email = email;
+        this.encryptedPassword = encryptedPassword;
+    }
+
     public List<PostDto> getPosts() {
         return posts;
     }
