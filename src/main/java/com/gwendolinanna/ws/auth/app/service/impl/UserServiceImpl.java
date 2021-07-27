@@ -84,15 +84,13 @@ public class UserServiceImpl implements UserService {
         if (userEntity == null) {
             throw new UsernameNotFoundException(email);
         }
-        UserDto userDto = new UserDto();
-        try {
-            userDto = utils.getModelMapper().map(userEntity, UserDto.class);
-        } catch (Exception e) {
-            // utils dependency getModelMapper not satified in test
-            userDto = new ModelMapper().map(userEntity, UserDto.class);
-            log.error("UserService getUserByEmail error: ", e.getMessage());
-        }
-        return userDto;
+        // UserDto userDto = new UserDto();
+        // disabled because junit test failure
+        // return utils.getModelMapper().map(userEntity, UserDto.class);
+        //  BeanUtils.copyProperties(userEntity, userDto);
+
+        // return userDto;
+        return new ModelMapper().map(userEntity, UserDto.class);
     }
 
     @Override
