@@ -3,7 +3,7 @@ package com.gwendolinanna.ws.auth.app.shared;
 import com.gwendolinanna.ws.auth.app.security.SecurityConstants;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.util.Date;
@@ -16,7 +16,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 /**
  * @author Johnkegd
  */
-@Component
+@Service
 public class Utils {
     private final Random RANDOM = new SecureRandom();
     private final String ALPHABET = "0123456789ABCDFEHIJKLMNOPQRSTUVWXYZabcdfehijklmnopqrstuvwzyz";

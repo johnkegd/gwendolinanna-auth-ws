@@ -49,11 +49,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private Utils utils;
 
+    @Autowired
+    private AmazonSES amazonSES;
+
 
     @Override
     public UserDto createUser(UserDto user) {
         if (userRepository.findByEmail(user.getEmail()) != null)
-            throw new RuntimeException("User already Exists");
+            throw new UserServiceException("User already Exists");
 
         for (PostDto post : user.getPosts()) {
             post.setPostId(utils.generatePostId(20));
@@ -73,7 +76,7 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = utils.getModelMapper().map(storedUserDetails, UserDto.class);
 
 
-        new AmazonSES().verifiyEmail(userDto);
+        amazonSES.verifyEmail(userDto);
         return userDto;
     }
 

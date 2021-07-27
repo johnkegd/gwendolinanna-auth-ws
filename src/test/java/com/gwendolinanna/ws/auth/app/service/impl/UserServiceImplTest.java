@@ -1,8 +1,10 @@
 package com.gwendolinanna.ws.auth.app.service.impl;
 
+import com.gwendolinanna.ws.auth.app.exceptions.UserServiceException;
 import com.gwendolinanna.ws.auth.app.io.entity.PostEntity;
 import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
 import com.gwendolinanna.ws.auth.app.io.repositories.UserRepository;
+import com.gwendolinanna.ws.auth.app.shared.AmazonSES;
 import com.gwendolinanna.ws.auth.app.shared.Utils;
 import com.gwendolinanna.ws.auth.app.shared.dto.PostDto;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -47,6 +50,9 @@ class UserServiceImplTest {
 
     @Mock
     Utils utils;
+
+    @Mock
+    AmazonSES amazonSES;
 
     String userId = "cq24thqm7656";
     String encryptedPassword = "asfg23e123rg213";
@@ -85,6 +91,21 @@ class UserServiceImplTest {
     }
 
     @Test
+    final void TestGetUser_CreateUserServiceException() {
+        when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
+        UserDto userDto = new UserDto();
+        userDto.setPosts(getPostsDto());
+        userDto.setFirstName("John");
+        userDto.setLastName("Garcia");
+        userDto.setPassword("22131");
+        userDto.setEmail("john@gwendolinanna.com");
+
+        assertThrows(UserServiceException.class, () -> {
+            userService.createUser(userDto);
+        });
+    }
+
+    @Test
     final void testCreateUser() {
 
         when(userRepository.findByEmail(anyString())).thenReturn(null);
@@ -92,6 +113,7 @@ class UserServiceImplTest {
         when(utils.generateUserId(anyInt())).thenReturn(userId);
         when(bCryptPasswordEncoder.encode(anyString())).thenReturn(encryptedPassword);
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+        Mockito.doNothing().when(amazonSES).verifyEmail(any(UserDto.class));
 
 
         UserDto userDto = new UserDto();

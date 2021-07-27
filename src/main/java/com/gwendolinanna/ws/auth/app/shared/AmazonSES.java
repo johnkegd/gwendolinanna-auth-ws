@@ -12,9 +12,12 @@ import com.amazonaws.services.simpleemail.model.SendEmailResult;
 import com.gwendolinanna.ws.auth.app.shared.dto.EmailTemplate;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 
+import org.springframework.stereotype.Service;
+
 /**
  * @author Johnkegd
  */
+@Service
 public class AmazonSES {
 
 
@@ -46,7 +49,7 @@ public class AmazonSES {
             + "http:/localhost:8080/verification-service/email-verification.html?token=$tokenValue";
 
 
-    public static void verifiyEmail(UserDto userDto) {
+    public static void verifyEmail(UserDto userDto) {
         String htmlBodytWithToken = HTMLBODY.replace("$tokenValue", userDto.getEmailVerificationToken());
         String textBodyWithToken = TEXTBODY.replace("$tokenValue", userDto.getEmailVerificationToken());
 
