@@ -14,6 +14,7 @@ public class SecurityConstants {
     public static final String VERIFICATION_EMAIL_URL = SING_UP_URL.concat("/email-verification");
     public static final String PASSWORD_RESET_REQUEST_URL = SING_UP_URL.concat("/password-reset-request");
     public static final String PASSWORD_RESET_URL = SING_UP_URL.concat("/password-reset");
+    public static final String H2_CONSOLE = "/h2-console/**";
 
 
     public static String getTokenSecret() {
