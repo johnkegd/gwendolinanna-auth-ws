@@ -6,6 +6,8 @@ import com.gwendolinanna.ws.auth.app.service.UserService;
 import com.gwendolinanna.ws.auth.app.shared.Utils;
 import com.gwendolinanna.ws.auth.app.shared.dto.PostDto;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
+import com.gwendolinanna.ws.auth.app.ui.model.request.PasswordResetModel;
+import com.gwendolinanna.ws.auth.app.ui.model.request.PasswordResetRequestModel;
 import com.gwendolinanna.ws.auth.app.ui.model.request.UserDetailsRequestModel;
 import com.gwendolinanna.ws.auth.app.ui.model.response.ErrorMessages;
 import com.gwendolinanna.ws.auth.app.ui.model.response.OperationStatusModel;
@@ -33,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,13 +46,13 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    PostService postService;
+    private PostService postService;
 
     @Autowired
-    Utils utils;
+    private Utils utils;
 
     @GetMapping(path = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -113,7 +116,7 @@ public class UserController {
             @RequestParam(value = "limit", defaultValue = "25") int limit) {
 
         List<UserRest> users = new ArrayList<>();
-        List<UserDto> usersDto = userService.getUsers(page,limit);
+        List<UserDto> usersDto = userService.getUsers(page, limit);
 
         for (UserDto user : usersDto) {
             UserRest userRest = utils.getModelMapper().map(user, UserRest.class);
@@ -129,8 +132,17 @@ public class UserController {
         List<PostDto> postDto = postService.getPosts(userId);
 
         if (postDto != null && !postDto.isEmpty()) {
-            Type listType = new TypeToken<List<PostRest>>() {}.getType();
+            Type listType = new TypeToken<List<PostRest>>() {
+            }.getType();
             posts = utils.getModelMapper().map(postDto, listType);
+
+            for (PostRest postRest : posts) {
+                Link postLink = WebMvcLinkBuilder.linkTo(
+                        WebMvcLinkBuilder.methodOn(UserController.class)
+                                .getUserPost(userId, postRest.getPostId())).withSelfRel();
+                postRest.add(postLink);
+            }
+
         }
 
         Link userLink = WebMvcLinkBuilder.linkTo(UserController.class)
@@ -148,7 +160,7 @@ public class UserController {
     @GetMapping(path = "/{userId}/posts/{postId}", produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE
     })
-    public EntityModel<PostRest> getUserPost(@PathVariable String userId ,@PathVariable String postId) {
+    public EntityModel<PostRest> getUserPost(@PathVariable String userId, @PathVariable String postId) {
         PostDto postDto = postService.getPost(postId);
         PostRest postRest = utils.getModelMapper().map(postDto, PostRest.class);
 
@@ -165,7 +177,62 @@ public class UserController {
                 WebMvcLinkBuilder
                         .methodOn(UserController.class).getUserPost(userId, postId)).withSelfRel();
 
-        return EntityModel.of(postRest, Arrays.asList(userLink,userPostsLink,selfLink));
+        return EntityModel.of(postRest, Arrays.asList(userLink, userPostsLink, selfLink));
     }
 
+    @GetMapping(path = "/email-verification",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
+        OperationStatusModel operationStatus = new OperationStatusModel();
+        operationStatus.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
+
+        boolean isVerified = userService.verifyEmailToken(token);
+
+        if (isVerified) {
+            operationStatus.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } else {
+            operationStatus.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+
+        return operationStatus;
+    }
+
+    @PostMapping(path = "/password-reset-request",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public OperationStatusModel passwordResetRequest(@RequestBody PasswordResetRequestModel passwordResetRequest) {
+        OperationStatusModel operationResponse = new OperationStatusModel();
+
+        boolean operationResult = userService.requestPasswordReset(passwordResetRequest.getEmail());
+        operationResponse.setOperationName(RequestOperationName.REQUEST_PASSWORD_RESET.name());
+        operationResponse.setOperationData("Modified at ".concat(new Date(System.currentTimeMillis()).toString()));
+
+        if (operationResult) {
+            operationResponse.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } else {
+            operationResponse.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+
+        return operationResponse;
+    }
+
+    @PostMapping(path = "/password-reset",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public OperationStatusModel resetPassword(@RequestBody PasswordResetModel passwordResetModel) {
+        OperationStatusModel operationStatus = new OperationStatusModel();
+
+        boolean operationResult = userService.resetPassword(
+                passwordResetModel.getToken(),
+                passwordResetModel.getPassword());
+        operationStatus.setOperationName(RequestOperationName.PASSWORD_RESET.name());
+
+        if (operationResult) {
+            operationStatus.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } else {
+            operationStatus.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+
+        return operationStatus;
+    }
 }

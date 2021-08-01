@@ -5,7 +5,6 @@ import com.gwendolinanna.ws.auth.app.SpringApplicationContext;
 import com.gwendolinanna.ws.auth.app.service.UserService;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
 import com.gwendolinanna.ws.auth.app.ui.model.request.UserLoginRequestModel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,17 +13,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import sun.rmi.runtime.Log;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -71,7 +65,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         UserDto userDto = new UserDto();
         try {
             userDto = userService.getUserByEmail(userName);
-            LOGGER.info(userDto.getUserId());
         } catch (Exception e) {
             LOGGER.error("error auth", e);
 
@@ -79,6 +72,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 
         response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-        response.addHeader("UserID",userDto.getUserId());
+        response.addHeader("UserID", userDto.getUserId());
     }
 }
