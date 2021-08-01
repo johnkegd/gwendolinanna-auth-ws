@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 
 /**
@@ -42,8 +42,22 @@ class UtilsTest {
 
     @Test
     @Disabled
+    final void testHasTokenNotExpired() {
+        String token = utils.generateEmailVerificationToken("p123uj2ohf");
+        assertNotNull(token);
+
+        boolean hasTokenExpired = utils.hasTokenExpired(token);
+        assertFalse(hasTokenExpired);
+    }
+
+    @Test
+    @Disabled
     final void testHasTokenExpired() {
-        fail("Not yet implemented");
+        String expiredToken = utils.generateEmailVerificationToken("12gh42ewfgryo5674werfq3");
+        assertNotNull(expiredToken);
+
+        boolean hasTokenExpired = utils.hasTokenExpired(expiredToken);
+        assertTrue(hasTokenExpired);
     }
 
 }

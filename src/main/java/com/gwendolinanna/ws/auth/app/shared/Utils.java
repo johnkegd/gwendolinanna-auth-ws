@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.Random;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -46,13 +47,21 @@ public class Utils {
     }
 
     public boolean hasTokenExpired(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(SecurityConstants.getTokenSecret())
-                .parseClaimsJws(token).getBody();
-        Date tokenExpirationDate = claims.getExpiration();
-        Date todayDate = new Date();
+        boolean expiredToken = false;
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(SecurityConstants.getTokenSecret())
+                    .parseClaimsJws(token).getBody();
+            Date tokenExpirationDate = claims.getExpiration();
 
-        return tokenExpirationDate.before(todayDate);
+            Date todayDate = new Date();
+            expiredToken = tokenExpirationDate.before(todayDate);
+        } catch (ExpiredJwtException e) {
+            expiredToken = true;
+        }
+
+
+        return expiredToken;
     }
 
     public String generateEmailVerificationToken(String userId) {
