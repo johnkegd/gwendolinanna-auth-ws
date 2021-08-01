@@ -17,6 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -37,6 +38,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Johnkegd
  */
+@SpringBootTest
 class UserServiceImplTest {
 
     @InjectMocks
