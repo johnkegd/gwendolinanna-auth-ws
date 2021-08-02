@@ -69,7 +69,7 @@ class UserControllerTest {
         assertEquals(userDto.getEmail(), userRest.getEmail());
         assertEquals(userDto.getEmailVerificationStatus(), Boolean.FALSE);
         assertTrue(userDto.getPosts().size() == userRest.getPosts().size());
-        
+
     }
 
     private List<PostDto> getPostsDto() {

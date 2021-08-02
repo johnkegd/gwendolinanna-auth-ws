@@ -10,7 +10,8 @@ public class ErrorMessage {
     private Date dateTimeout;
     private String message;
 
-    public ErrorMessage(){}
+    public ErrorMessage() {
+    }
 
     public ErrorMessage(Date dateTimeout, String message) {
         this.dateTimeout = dateTimeout;

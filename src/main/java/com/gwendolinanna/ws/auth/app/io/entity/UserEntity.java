@@ -2,6 +2,7 @@ package com.gwendolinanna.ws.auth.app.io.entity;
 
 import java.io.Serializable;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +14,7 @@ import javax.persistence.OneToMany;
 /**
  * @author Johnkegd
  */
-@Entity(name ="users")
+@Entity(name = "users")
 public class UserEntity implements Serializable {
     private static long serialVersionUID = 65456465456456L;
 
@@ -47,6 +48,7 @@ public class UserEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     public Long getId() {
         return id;
     }
