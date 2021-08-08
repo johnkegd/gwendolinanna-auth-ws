@@ -35,4 +35,7 @@ public interface UserRepository extends PagingAndSortingRepository<UserEntity, L
     @Query(value = "select * from Users user where user.last_name = :lastName", nativeQuery = true)
     List<UserEntity> findUserByLastName(@Param("lastName") String lastName);
 
+    @Query(value = "select * from Users user where user.first_name LIKE %:keyword% or user.last_name LIKE %:keyword%", nativeQuery = true)
+    List<UserEntity> findUserByKeyword(@Param("keyword") String keyword);
+
 }
