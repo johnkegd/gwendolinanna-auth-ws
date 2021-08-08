@@ -23,7 +23,6 @@ import java.util.Arrays;
 public class WebSecurity extends WebSecurityConfigurerAdapter {
     private final UserService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final String AUTH_LOGIN_URL = "/users/login";
 
     public WebSecurity(UserService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userDetailsService = userDetailsService;
@@ -44,6 +43,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_REQUEST_URL).permitAll()
                 .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL).permitAll()
                 .antMatchers(SecurityConstants.H2_CONSOLE).permitAll()
+                .antMatchers(
+                        SwaggerConstants.API_PATH.getPattern(),
+                        SwaggerConstants.CONFIG_PATH.getPattern(),
+                        SwaggerConstants.SWAGGER_PATH.getPattern(),
+                        SwaggerConstants.WEBJARS_PATH.getPattern())
+                .permitAll()
                 .anyRequest().authenticated().and()
                 .addFilter(getAuthenticationFilter())
                 .addFilter(new AuthorizationFilter(authenticationManager()))
@@ -61,7 +66,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     public AuthenticationFilter getAuthenticationFilter() throws Exception {
         final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
-        filter.setFilterProcessesUrl(AUTH_LOGIN_URL);
+        filter.setFilterProcessesUrl(SecurityConstants.AUTH_LOGIN_URL);
         return filter;
     }
 

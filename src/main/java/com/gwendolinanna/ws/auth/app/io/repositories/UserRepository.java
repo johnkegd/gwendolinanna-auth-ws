@@ -58,7 +58,7 @@ public interface UserRepository extends PagingAndSortingRepository<UserEntity, L
 
     @Modifying
     @Transactional
-    @Query("UPDATE UserEntity  user set user.emailVerificationStatus =: emailVerificationStatus where user.userId =:userId")
+    @Query("UPDATE UserEntity user set user.emailVerificationStatus =:emailVerificationStatus where user.userId =:userId")
     void updateUserEntityEmailVerificationStatus(
             @Param("emailVerificationStatus") boolean emailVerificationStatus,
             @Param("userId") String userId);

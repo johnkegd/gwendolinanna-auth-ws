@@ -26,4 +26,12 @@ public class SwaggerConfig {
         return docket;
     }
 
+    /* if not satified error or compatibility with spring boot generate errors
+    @Bean
+    public LinkDiscoverers discoverers() {
+        List<LinkDiscoverer> plugins = new ArrayList<>();
+        plugins.add(new CollectionJsonLinkDiscoverer());
+        return new LinkDiscoverers(SimplePluginRegistry.of(plugins));
+    }
+     */
 }
