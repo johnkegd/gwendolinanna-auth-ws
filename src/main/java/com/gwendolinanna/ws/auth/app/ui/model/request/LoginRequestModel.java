@@ -1,5 +1,14 @@
 package com.gwendolinanna.ws.auth.app.ui.model.request;
+
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author Johnkegd
- */public class LoginRequestModel {
+ */
+@Getter
+@Setter
+public class LoginRequestModel {
+    private String email;
+    private String password;
 }
