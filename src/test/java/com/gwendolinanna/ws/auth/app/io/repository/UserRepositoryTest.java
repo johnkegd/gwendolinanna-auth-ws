@@ -103,6 +103,17 @@ class UserRepositoryTest {
         assertTrue(userFirstName.contains(keyword) || userLastName.contains(keyword));
     }
 
+    @Test
+    final void testUpdateUserEmailVerificationStatus() {
+        boolean newEmailVerification = false;
+        userRepository.updateUserEmailVerificationStatus(newEmailVerification, "khjk12gbh");
+
+        UserEntity storedUserDetails = userRepository.findByUserId("khjk12gbh");
+        boolean storedEmailVerificationStatus = storedUserDetails.getEmailVerificationStatus();
+
+        assertTrue(storedEmailVerificationStatus == newEmailVerification);
+    }
+
     private void createRecords() {
         UserEntity userEntity = new UserEntity();
         userEntity.setFirstName("Gwendolin");
