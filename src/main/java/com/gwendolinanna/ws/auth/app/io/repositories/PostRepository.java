@@ -15,5 +15,6 @@ import java.util.List;
 public interface PostRepository extends CrudRepository<PostEntity, Long> {
 
     List<PostEntity> findAllByUserDetails(UserEntity userEntity);
+
     PostEntity findByPostId(String PostId);
 }
