@@ -40,6 +40,7 @@ import java.util.List;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * @author Johnkegd
@@ -58,6 +59,9 @@ public class UserController {
     @Autowired
     private Utils utils;
 
+    @ApiOperation(
+            value = "Get user details web service endpoint",
+            notes = "${userController.getUser.apiOperation.notes}")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
     })
@@ -72,6 +76,10 @@ public class UserController {
         return userRest;
     }
 
+    @ApiOperation(
+            value = "Create and persist user details",
+            notes = "${userController.createUser.apiOperation.notes}"
+    )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
     })
@@ -90,6 +98,10 @@ public class UserController {
         return returnValue;
     }
 
+    @ApiOperation(
+            value = "Update user details endpoint",
+            notes = "${userController.updateUser.apiOperation.notes}"
+    )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header"),
     })
@@ -110,6 +122,11 @@ public class UserController {
         return userRest;
     }
 
+    @ApiOperation(
+            value = "Delete user details endpoint",
+            notes = "${userController.deleteUser.apiOperation.notes}"
+
+    )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
     })
@@ -127,6 +144,10 @@ public class UserController {
         return operation;
     }
 
+    @ApiOperation(
+            value = "Get (MULTIPLE) users details web service endpoint",
+            notes = "${userController.getUsers.apiOperation.notes}"
+    )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
     })
@@ -150,6 +171,10 @@ public class UserController {
         return users;
     }
 
+    @ApiOperation(
+            value = "Get user (MULTIPLE) posts details",
+            notes = "${userController.getUserPosts.apiOperation.notes}"
+    )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
     })
@@ -184,6 +209,10 @@ public class UserController {
         return CollectionModel.of(posts, userLink, selfLink);
     }
 
+    @ApiOperation(
+            value = "Get user post details",
+            notes = "${userController.getUserPost.apiOperation.notes}"
+    )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
     })
