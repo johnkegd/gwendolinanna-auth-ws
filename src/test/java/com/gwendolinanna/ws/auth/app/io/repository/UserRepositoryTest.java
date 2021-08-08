@@ -114,6 +114,16 @@ class UserRepositoryTest {
         assertTrue(userEntity.getUserId().equals(userId));
     }
 
+    @Test
+    final void testGetUserEntityFullNameById() {
+        List<Object[]> records = userRepository.getUserEntityFullNameById("t2eg");
+
+        assertNotNull(records);
+        assertTrue(records.size() == 1);
+        String firstName = String.valueOf(records.get(0)[0]);
+        String lastName = String.valueOf(records.get(0)[1]);
+    }
+
     private void createRecords() {
         UserEntity userEntity = new UserEntity();
         userEntity.setFirstName("Gwendolin");
