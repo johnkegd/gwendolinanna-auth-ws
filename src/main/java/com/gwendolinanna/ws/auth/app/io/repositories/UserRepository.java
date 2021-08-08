@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author Johnkegd
  */
@@ -26,4 +28,7 @@ public interface UserRepository extends PagingAndSortingRepository<UserEntity, L
             nativeQuery = true)
     Page<UserEntity> findAllUsersWithConfirmedEmail(Pageable pageableRequest);
 
+    @Query(value = "select * from Users user where user.first_name = ?1", nativeQuery = true)
+    List<UserEntity> findUserByFirstName(String firstName);
+    
 }

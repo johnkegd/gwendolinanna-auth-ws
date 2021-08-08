@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -30,8 +31,40 @@ class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
+    private static boolean recordsCreated = false;
+
     @BeforeEach
     public void setUp() throws Exception {
+        if (!recordsCreated) {
+            createRecords();
+        }
+    }
+
+    @Test
+    final void testGetVerifiedUsers() {
+        Pageable pageableReq = PageRequest.of(0, 2);
+        Page<UserEntity> page = userRepository.findAllUsersWithConfirmedEmail(pageableReq);
+
+        List<UserEntity> userEntities = page.getContent();
+
+        assertNotNull(userEntities);
+        assertTrue(userEntities.size() == 1);
+
+    }
+
+    @Test
+    final void testfindUserByFirstName() {
+        String firstName = "Gwendolin";
+        List<UserEntity> users = userRepository.findUserByFirstName(firstName);
+
+        assertNotNull(users);
+        assertTrue(users.size() == 1);
+
+        UserEntity user = users.get(0);
+        assertTrue(user.getFirstName().equals(firstName));
+    }
+
+    private void createRecords() {
         UserEntity userEntity = new UserEntity();
         userEntity.setFirstName("Gwendolin");
         userEntity.setLastName("Rotach");
@@ -53,13 +86,4 @@ class UserRepositoryTest {
         userEntity.setPosts(posts);
         userRepository.save(userEntity);
     }
-
-    @Test
-    final void testGetVerifiedUsers() {
-        Pageable pageableReq = PageRequest.of(0, 2);
-        Page<UserEntity> page = userRepository.findAllUsersWithConfirmedEmail(pageableReq);
-
-        assertNotNull(page);
-    }
-
 }
