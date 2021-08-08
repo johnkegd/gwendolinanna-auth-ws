@@ -33,6 +33,8 @@ class UserRepositoryTest {
 
     private static boolean recordsCreated = false;
 
+    private static String USER_ID = "da123";
+
     @BeforeEach
     public void setUp() throws Exception {
         if (!recordsCreated) {
@@ -103,11 +105,20 @@ class UserRepositoryTest {
         assertTrue(userFirstName.contains(keyword) || userLastName.contains(keyword));
     }
 
+    @Test
+    final void testFindUserEntityByUserId() {
+        String userId = "poiu";
+        UserEntity userEntity = userRepository.findUserEntityByUserId(userId);
+
+        assertNotNull(userEntity);
+        assertTrue(userEntity.getUserId().equals(userId));
+    }
+
     private void createRecords() {
         UserEntity userEntity = new UserEntity();
         userEntity.setFirstName("Gwendolin");
         userEntity.setLastName("Rotach");
-        userEntity.setUserId("da123");
+        userEntity.setUserId(USER_ID);
         userEntity.setEmail("gwendolin@gwendolinanna.com");
         userEntity.setEncryptedPassword("sdf1323");
         userEntity.setEmailVerificationStatus(true);
