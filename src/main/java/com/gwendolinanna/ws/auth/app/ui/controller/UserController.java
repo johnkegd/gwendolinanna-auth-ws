@@ -38,6 +38,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+
 /**
  * @author Johnkegd
  */
@@ -55,6 +58,9 @@ public class UserController {
     @Autowired
     private Utils utils;
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
+    })
     @GetMapping(path = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     //@CrossOrigin(origins = {"https://gwendolinanna.com", "http://localhost:8888"})
@@ -66,6 +72,9 @@ public class UserController {
         return userRest;
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
+    })
     @PostMapping(
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -81,6 +90,9 @@ public class UserController {
         return returnValue;
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header"),
+    })
     @PutMapping(path = "/{id}",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -98,6 +110,9 @@ public class UserController {
         return userRest;
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
+    })
     @DeleteMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public OperationStatusModel deleteUser(@PathVariable String id) {
         OperationStatusModel operation = new OperationStatusModel();
@@ -112,6 +127,9 @@ public class UserController {
         return operation;
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
+    })
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public List<UserRest> getUsers(
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -120,14 +138,21 @@ public class UserController {
         List<UserRest> users = new ArrayList<>();
         List<UserDto> usersDto = userService.getUsers(page, limit);
 
-        for (UserDto user : usersDto) {
-            UserRest userRest = utils.getModelMapper().map(user, UserRest.class);
-            users.add(userRest);
-        }
+        Type listType = new TypeToken<List<UserRest>>() {
+        }.getType();
+
+        users = utils.getModelMapper().map(usersDto, listType);
+//        for (UserDto user : usersDto) {
+//            UserRest userRest = utils.getModelMapper().map(user, UserRest.class);
+//            users.add(userRest);
+//        }
 
         return users;
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
+    })
     @GetMapping(path = "/{userId}/posts", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public CollectionModel<PostRest> getUserPosts(@PathVariable String userId) {
         List<PostRest> posts = new ArrayList<>();
@@ -159,6 +184,9 @@ public class UserController {
         return CollectionModel.of(posts, userLink, selfLink);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
+    })
     @GetMapping(path = "/{userId}/posts/{postId}", produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE
     })
