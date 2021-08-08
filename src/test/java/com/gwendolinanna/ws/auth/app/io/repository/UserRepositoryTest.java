@@ -78,14 +78,29 @@ class UserRepositoryTest {
 
     @Test
     final void testFindUserByKeyword() {
-        String keyword = "arg";
-        List<UserEntity> users = userRepository.findUserByLastName(keyword);
+        String keyword = "wendo";
+        List<UserEntity> users = userRepository.findUserByKeyword(keyword);
 
         assertNotNull(users);
         assertTrue(users.size() == 1);
 
         UserEntity user = users.get(0);
         assertTrue(user.getLastName().contains(keyword) || user.getFirstName().contains(keyword));
+    }
+
+    @Test
+    final void testFindUsersFirstNameAndLastNameByKeyword() {
+        String keyword = "tac";
+        List<Object[]> users = userRepository.findUsersFirstNameAndLastNameByKeyword(keyword);
+
+        assertNotNull(users);
+        assertTrue(users.size() == 1);
+
+        Object[] user = users.get(0);
+        String userFirstName = String.valueOf(user[0]);
+        String userLastName = String.valueOf(user[1]);
+
+        assertTrue(userFirstName.contains(keyword) || userLastName.contains(keyword));
     }
 
     private void createRecords() {
