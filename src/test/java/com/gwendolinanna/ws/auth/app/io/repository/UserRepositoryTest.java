@@ -106,6 +106,18 @@ class UserRepositoryTest {
     }
 
     @Test
+    final void testUpdateUserEmailVerificationStatus() {
+        boolean newEmailVerificationStatus = true;
+        userRepository.updateUserEmailVerificationStatus(newEmailVerificationStatus, USER_ID);
+
+        UserEntity storedUserDetails = userRepository.findByUserId(USER_ID);
+
+        boolean storedEmailVerificationStatus = storedUserDetails.getEmailVerificationStatus();
+
+        assertTrue(storedEmailVerificationStatus == newEmailVerificationStatus);
+    }
+
+    @Test
     final void testFindUserEntityByUserId() {
         String userId = "poiu";
         UserEntity userEntity = userRepository.findUserEntityByUserId(userId);
@@ -122,6 +134,17 @@ class UserRepositoryTest {
         assertTrue(records.size() == 1);
         String firstName = String.valueOf(records.get(0)[0]);
         String lastName = String.valueOf(records.get(0)[1]);
+    }
+
+    @Test
+    final void testUpdateUserEntityEmailVerificationStatus() {
+        boolean newStatus = true;
+        userRepository.updateUserEntityEmailVerificationStatus(newStatus, USER_ID);
+
+        boolean currentStatus = userRepository.findByUserId(USER_ID).getEmailVerificationStatus();
+
+        assertTrue(currentStatus == newStatus);
+
     }
 
     private void createRecords() {
