@@ -11,27 +11,21 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * @author Johnkegd
  */
-@Setter
-@Getter
 @Entity
 @Table(name = "authorities")
 public class AuthorityEntity implements Serializable {
 
-    private static final long serialVersionIUD = 9286712456757310L;
+    private static final long serialVersionIUD = -928677846752732310L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
     @Column(nullable = false, length = 20)
     private String name;
-
 
     @ManyToMany(mappedBy = "authorities")
     private Collection<RoleEntity> roles;
@@ -39,5 +33,25 @@ public class AuthorityEntity implements Serializable {
     @Id
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Collection<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<RoleEntity> roles) {
+        this.roles = roles;
     }
 }

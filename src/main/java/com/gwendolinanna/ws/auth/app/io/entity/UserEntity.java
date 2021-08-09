@@ -16,14 +16,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * @author Johnkegd
  */
-@Getter
-@Setter
 @Entity
 @Table(name = "users")
 public class UserEntity implements Serializable {
@@ -31,7 +26,7 @@ public class UserEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private long id;
 
     @Column(nullable = false)
     private String userId;
@@ -58,14 +53,96 @@ public class UserEntity implements Serializable {
 
     @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "users_role",
+            name = "users_roles",
             joinColumns = @JoinColumn(
                     name = "users_id",
                     referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "roles_id",
-                    referencedColumnName = "id"
-            ))
+                    referencedColumnName = "id"))
     private Collection<RoleEntity> roles;
 
+    public boolean getEmailVerificationStatus() {
+        return this.emailVerificationStatus;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEncryptedPassword() {
+        return encryptedPassword;
+    }
+
+    public void setEncryptedPassword(String encryptedPassword) {
+        this.encryptedPassword = encryptedPassword;
+    }
+
+    public String getEmailVerificationToken() {
+        return emailVerificationToken;
+    }
+
+    public void setEmailVerificationToken(String emailVerificationToken) {
+        this.emailVerificationToken = emailVerificationToken;
+    }
+
+    public boolean isEmailVerificationStatus() {
+        return emailVerificationStatus;
+    }
+
+    public void setEmailVerificationStatus(boolean emailVerificationStatus) {
+        this.emailVerificationStatus = emailVerificationStatus;
+    }
+
+    public List<PostEntity> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<PostEntity> posts) {
+        this.posts = posts;
+    }
+
+    public Collection<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<RoleEntity> roles) {
+        this.roles = roles;
+    }
 }
