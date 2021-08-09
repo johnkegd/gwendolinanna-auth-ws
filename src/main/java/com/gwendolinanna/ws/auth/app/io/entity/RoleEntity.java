@@ -2,6 +2,7 @@ package com.gwendolinanna.ws.auth.app.io.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -39,14 +40,13 @@ public class RoleEntity implements Serializable {
             name = "roles_authorities",
             joinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "authorities_id", referencedColumnName = "id"))
-    private Collection<AuthorityEntity> authorities;
+    private Set<AuthorityEntity> authorities;
 
-    @Id
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -66,11 +66,11 @@ public class RoleEntity implements Serializable {
         this.users = users;
     }
 
-    public Collection<AuthorityEntity> getAuthorities() {
+    public Set<AuthorityEntity> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Collection<AuthorityEntity> authorities) {
+    public void setAuthorities(Set<AuthorityEntity> authorities) {
         this.authorities = authorities;
     }
 }

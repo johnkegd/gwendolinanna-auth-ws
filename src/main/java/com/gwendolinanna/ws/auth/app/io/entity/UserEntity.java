@@ -1,8 +1,8 @@
 package com.gwendolinanna.ws.auth.app.io.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -60,17 +60,17 @@ public class UserEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(
                     name = "roles_id",
                     referencedColumnName = "id"))
-    private Collection<RoleEntity> roles;
+    private Set<RoleEntity> roles;
 
     public boolean getEmailVerificationStatus() {
         return this.emailVerificationStatus;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -138,11 +138,11 @@ public class UserEntity implements Serializable {
         this.posts = posts;
     }
 
-    public Collection<RoleEntity> getRoles() {
+    public Set<RoleEntity> getRoles() {
         return roles;
     }
 
-    public void setRoles(Collection<RoleEntity> roles) {
+    public void setRoles(Set<RoleEntity> roles) {
         this.roles = roles;
     }
 }
