@@ -19,6 +19,8 @@ public class UserPrincipal implements UserDetails {
 
     private static final long serialVersionIUD = -7912836110234358771L;
 
+    private String userId;
+
     private UserEntity userEntity;
 
     public UserPrincipal() {
@@ -26,6 +28,7 @@ public class UserPrincipal implements UserDetails {
 
     public UserPrincipal(UserEntity userEntity) {
         this.userEntity = userEntity;
+        this.userId = userEntity.getUserId();
     }
 
     @Override
@@ -80,5 +83,13 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return userEntity.getEmailVerificationStatus();
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

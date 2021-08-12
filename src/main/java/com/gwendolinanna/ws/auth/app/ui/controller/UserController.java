@@ -123,7 +123,8 @@ public class UserController {
         return userRest;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or #id == principal.userId")
+    //@PreAuthorize("hasAuthority('DELETE_AUTHORITY')")
     //@Secured("ROLE_ADMIN")
     @ApiOperation(
             value = "Delete user details endpoint",
