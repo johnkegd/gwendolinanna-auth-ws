@@ -1,5 +1,6 @@
 package com.gwendolinanna.ws.auth.app.security;
 
+import com.gwendolinanna.ws.auth.app.io.repositories.UserRepository;
 import com.gwendolinanna.ws.auth.app.service.UserService;
 
 import org.springframework.context.annotation.Bean;
@@ -23,10 +24,12 @@ import java.util.Arrays;
 public class WebSecurity extends WebSecurityConfigurerAdapter {
     private final UserService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
 
-    public WebSecurity(UserService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public WebSecurity(UserService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository) {
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -51,7 +54,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .anyRequest().authenticated().and()
                 .addFilter(getAuthenticationFilter())
-                .addFilter(new AuthorizationFilter(authenticationManager()))
+                .addFilter(new AuthorizationFilter(authenticationManager(), userRepository))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

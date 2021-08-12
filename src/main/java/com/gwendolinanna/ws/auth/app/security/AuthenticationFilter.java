@@ -12,7 +12,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
@@ -57,7 +56,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             FilterChain chain,
                                             Authentication authResult) {
 
-        String userName = ((User) authResult.getPrincipal()).getUsername();
+        String userName = ((UserPrincipal) authResult.getPrincipal()).getUsername();
         //String tokenSecurity = new SecurityConstans().getTokenSecret();
 
         String token = Jwts.builder()
