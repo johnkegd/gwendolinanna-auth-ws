@@ -6,6 +6,7 @@ import com.gwendolinanna.ws.auth.app.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 /**
  * @author Johnkegd
  */
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
     private final UserService userDetailsService;
@@ -52,7 +54,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                         SwaggerConstants.SWAGGER_PATH.getPattern(),
                         SwaggerConstants.WEBJARS_PATH.getPattern())
                 .permitAll()
-                .antMatchers(HttpMethod.DELETE, "/users/**").hasAnyAuthority("DELETE_AUTHORITY")
+                //.antMatchers(HttpMethod.DELETE, "/users/**").hasAnyAuthority("DELETE_AUTHORITY")
                 //.antMatchers(HttpMethod.DELETE, "/users/**").hasAnyAuthority("DELETE_AUTHORITY", "DELETE_ALL_AUTHORITY")
                 //.antMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
                 //.antMatchers(HttpMethod.DELETE, "/users/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
