@@ -1,12 +1,14 @@
 package com.gwendolinanna.ws.auth.app.shared.dto;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * @author Johnkegd
  */
 public class UserDto implements Serializable {
+
     private static final long serialVersionUID = 6454654435153164L;
     private long id;
     private String userId;
@@ -18,6 +20,7 @@ public class UserDto implements Serializable {
     private String emailVerificationToken;
     private boolean emailVerificationStatus;
     private List<PostDto> posts;
+    private Collection<String> roles;
 
     public UserDto() {
     }
@@ -112,4 +115,11 @@ public class UserDto implements Serializable {
         this.emailVerificationStatus = emailVerificationStatus;
     }
 
+    public Collection<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<String> roles) {
+        this.roles = roles;
+    }
 }

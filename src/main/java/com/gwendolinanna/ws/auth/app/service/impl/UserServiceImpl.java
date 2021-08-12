@@ -2,8 +2,10 @@ package com.gwendolinanna.ws.auth.app.service.impl;
 
 import com.gwendolinanna.ws.auth.app.exceptions.UserServiceException;
 import com.gwendolinanna.ws.auth.app.io.entity.PasswordResetTokenEntity;
+import com.gwendolinanna.ws.auth.app.io.entity.RoleEntity;
 import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
 import com.gwendolinanna.ws.auth.app.io.repositories.PasswordResetRepository;
+import com.gwendolinanna.ws.auth.app.io.repositories.RoleRepository;
 import com.gwendolinanna.ws.auth.app.io.repositories.UserRepository;
 import com.gwendolinanna.ws.auth.app.security.UserPrincipal;
 import com.gwendolinanna.ws.auth.app.service.UserService;
@@ -24,6 +26,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -52,6 +56,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private AmazonSES amazonSES;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
 
     @Override
     public UserDto createUser(UserDto user) {
@@ -71,6 +78,18 @@ public class UserServiceImpl implements UserService {
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userEntity.setEmailVerificationToken(utils.generateEmailVerificationToken(publicUserId));
         userEntity.setEmailVerificationStatus(false);
+
+        //setting roles
+        Collection<RoleEntity> roleEntities = new HashSet<>();
+        for (String role : user.getRoles()) {
+            RoleEntity roleEntity = roleRepository.findByName(role);
+            if (roleEntity != null) {
+                roleEntities.add(roleEntity);
+            }
+        }
+
+        userEntity.setRoles(new HashSet<>(roleEntities));
+
         UserEntity storedUserDetails = userRepository.save(userEntity);
 
         UserDto userDto = utils.getModelMapper().map(storedUserDetails, UserDto.class);

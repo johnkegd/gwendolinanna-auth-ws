@@ -3,6 +3,7 @@ package com.gwendolinanna.ws.auth.app.ui.controller;
 import com.gwendolinanna.ws.auth.app.exceptions.UserServiceException;
 import com.gwendolinanna.ws.auth.app.service.PostService;
 import com.gwendolinanna.ws.auth.app.service.UserService;
+import com.gwendolinanna.ws.auth.app.shared.Roles;
 import com.gwendolinanna.ws.auth.app.shared.Utils;
 import com.gwendolinanna.ws.auth.app.shared.dto.PostDto;
 import com.gwendolinanna.ws.auth.app.shared.dto.UserDto;
@@ -38,6 +39,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import io.swagger.annotations.ApiImplicitParam;
@@ -94,6 +96,8 @@ public class UserController {
             throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
 
         UserDto userDto = utils.getModelMapper().map(userDetails, UserDto.class);
+
+        userDto.setRoles(new HashSet<>(Arrays.asList(Roles.ROLE_USER.name())));
 
         UserDto createdUser = userService.createUser(userDto);
         UserRest returnValue = utils.getModelMapper().map(createdUser, UserRest.class);

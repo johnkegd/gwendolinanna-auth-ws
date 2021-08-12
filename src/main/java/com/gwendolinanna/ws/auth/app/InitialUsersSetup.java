@@ -6,6 +6,7 @@ import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
 import com.gwendolinanna.ws.auth.app.io.repositories.AuthorityRepository;
 import com.gwendolinanna.ws.auth.app.io.repositories.RoleRepository;
 import com.gwendolinanna.ws.auth.app.io.repositories.UserRepository;
+import com.gwendolinanna.ws.auth.app.shared.Roles;
 import com.gwendolinanna.ws.auth.app.shared.Utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +50,8 @@ public class InitialUsersSetup {
         AuthorityEntity writeAuthority = createAuthority("WRITE_AUTHORITY");
         AuthorityEntity deleteAuthority = createAuthority("DELETE_AUTHORITY");
 
-        RoleEntity roleUser = createRole("ROLE_USER", Arrays.asList(readAuthority, writeAuthority));
-        RoleEntity roleAdmin = createRole("ROLE_ADMIN", Arrays.asList(readAuthority, writeAuthority, deleteAuthority));
+        RoleEntity roleUser = createRole(Roles.ROLE_USER.name(), Arrays.asList(readAuthority, writeAuthority));
+        RoleEntity roleAdmin = createRole(Roles.ROLE_ADMIN.name(), Arrays.asList(readAuthority, writeAuthority, deleteAuthority));
 
         if (roleAdmin == null) return;
 
@@ -62,7 +63,7 @@ public class InitialUsersSetup {
         adminUser.setUserId(utils.generateUserId(10));
         adminUser.setEncryptedPassword(bCryptPasswordEncoder.encode("hola"));
         adminUser.setRoles(new HashSet<>(Arrays.asList(roleAdmin)));
-        
+
 
         userRepository.save(adminUser);
 
