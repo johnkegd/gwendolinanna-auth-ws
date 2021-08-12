@@ -52,6 +52,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                         SwaggerConstants.SWAGGER_PATH.getPattern(),
                         SwaggerConstants.WEBJARS_PATH.getPattern())
                 .permitAll()
+                .antMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
                 .anyRequest().authenticated().and()
                 .addFilter(getAuthenticationFilter())
                 .addFilter(new AuthorizationFilter(authenticationManager(), userRepository))
