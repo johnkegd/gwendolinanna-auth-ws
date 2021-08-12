@@ -5,6 +5,7 @@ import com.gwendolinanna.ws.auth.app.io.entity.PasswordResetTokenEntity;
 import com.gwendolinanna.ws.auth.app.io.entity.UserEntity;
 import com.gwendolinanna.ws.auth.app.io.repositories.PasswordResetRepository;
 import com.gwendolinanna.ws.auth.app.io.repositories.UserRepository;
+import com.gwendolinanna.ws.auth.app.security.UserPrincipal;
 import com.gwendolinanna.ws.auth.app.service.UserService;
 import com.gwendolinanna.ws.auth.app.shared.AmazonSES;
 import com.gwendolinanna.ws.auth.app.shared.Utils;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -211,12 +211,13 @@ public class UserServiceImpl implements UserService {
         if (userEntity == null)
             throw new UsernameNotFoundException(email);
 
+        return new UserPrincipal(userEntity);
 
-        return new User(userEntity.getEmail(),
-                userEntity.getEncryptedPassword(),
-                userEntity.getEmailVerificationStatus(),
-                true, true, true,
-                new ArrayList<>());
+//        return new User(userEntity.getEmail(),
+//                userEntity.getEncryptedPassword(),
+//                userEntity.getEmailVerificationStatus(),
+//                true, true, true,
+//                new ArrayList<>());
     }
 
 }
