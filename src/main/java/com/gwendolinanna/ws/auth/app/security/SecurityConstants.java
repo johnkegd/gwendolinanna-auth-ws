@@ -16,6 +16,10 @@ public class SecurityConstants {
     public static final String PASSWORD_RESET_REQUEST_URL = SING_UP_URL.concat("/password-reset-request");
     public static final String PASSWORD_RESET_URL = SING_UP_URL.concat("/password-reset");
     public static final String H2_CONSOLE = "/h2-console/**";
+    
+    public static final String READ_AUTHORITY = "READ_AUTHORITY";
+    public static final String WRITE_AUTHORITY = "WRITE_AUTHORITY";
+    public static final String DELETE_AUTHORITY = "DELETE_AUTHORITY";
 
     public static String getTokenSecret() {
         AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("appProperties");

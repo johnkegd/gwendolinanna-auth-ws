@@ -19,15 +19,18 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Johnkegd
  */
+@Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationFilter.class);
@@ -68,11 +71,16 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         try {
             userDto = userService.getUserByEmail(userName);
         } catch (Exception e) {
-            LOGGER.error("error auth", e);
-
+            log.error("successful authentication error: ", e);
         }
 
         response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
         response.addHeader("UserID", userDto.getUserId());
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        log.warn("unsuccessful authentication auth: ", failed.getMessage());
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
 }

@@ -20,6 +20,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
+import static com.gwendolinanna.ws.auth.app.security.SecurityConstants.DELETE_AUTHORITY;
+import static com.gwendolinanna.ws.auth.app.security.SecurityConstants.READ_AUTHORITY;
+import static com.gwendolinanna.ws.auth.app.security.SecurityConstants.WRITE_AUTHORITY;
+
 /**
  * @author Johnkegd
  */
@@ -46,9 +50,9 @@ public class InitialUsersSetup {
     public void onApplicationEvent(ApplicationReadyEvent event) {
         System.out.println("From Application ready");
 
-        AuthorityEntity readAuthority = createAuthority("READ_AUTHORITY");
-        AuthorityEntity writeAuthority = createAuthority("WRITE_AUTHORITY");
-        AuthorityEntity deleteAuthority = createAuthority("DELETE_AUTHORITY");
+        AuthorityEntity readAuthority = createAuthority(READ_AUTHORITY);
+        AuthorityEntity writeAuthority = createAuthority(WRITE_AUTHORITY);
+        AuthorityEntity deleteAuthority = createAuthority(DELETE_AUTHORITY);
 
         RoleEntity roleUser = createRole(Roles.ROLE_USER.name(), Arrays.asList(readAuthority, writeAuthority));
         RoleEntity roleAdmin = createRole(Roles.ROLE_ADMIN.name(), Arrays.asList(readAuthority, writeAuthority, deleteAuthority));
