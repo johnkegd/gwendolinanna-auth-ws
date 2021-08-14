@@ -3,12 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.gwendolinanna.ws.auth.app</groupId>
-    <artifactId>gwendolinanna-ws-auth</artifactId>
+    <groupId>com.gwendolinanna.auth.ws.app</groupId>
+    <artifactId>gwendolinanna-auth-ws</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>gwendolinanna-ws-auth</name>
+    <name>gwendolinanna-auth-ws</name>
     <description>Rest service for user authentication</description>
     <properties>
         <project.build.sourceEnconding>UTF-8</project.build.sourceEnconding>
