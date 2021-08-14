@@ -40,17 +40,16 @@ public class UserPrincipal implements UserDetails {
 
         if (roles == null) {
             return authorities;
+        } else {
+            roles.forEach(role -> {
+                authorities.add(new SimpleGrantedAuthority(role.getName()));
+                authorityEntities.addAll(role.getAuthorities());
+            });
+
+            authorityEntities.forEach(authorityEntity -> {
+                authorities.add(new SimpleGrantedAuthority(authorityEntity.getName()));
+            });
         }
-
-        roles.forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-            authorityEntities.addAll(role.getAuthorities());
-        });
-
-        authorityEntities.forEach(authorityEntity -> {
-            authorities.add(new SimpleGrantedAuthority(authorityEntity.getName()));
-        });
-
         return authorities;
     }
 

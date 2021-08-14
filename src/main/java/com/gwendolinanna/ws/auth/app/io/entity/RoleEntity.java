@@ -46,6 +46,7 @@ public class RoleEntity implements Serializable {
     }
 
     public RoleEntity(String roleName) {
+        this.name = roleName;
     }
 
     public long getId() {

@@ -176,14 +176,11 @@ public class UserServiceImpl implements UserService {
         boolean verificationResult = false;
         UserEntity userEntity = userRepository.findUserByEmailVerificationToken(token);
 
-        if (userEntity != null) {
-            if (!utils.hasTokenExpired(token)) {
-                userEntity.setEmailVerificationToken(null);
-                userEntity.setEmailVerificationStatus(Boolean.TRUE);
-                userRepository.save(userEntity);
-                verificationResult = true;
-            }
-
+        if (userEntity != null && !utils.hasTokenExpired(token)) {
+            userEntity.setEmailVerificationToken(null);
+            userEntity.setEmailVerificationStatus(Boolean.TRUE);
+            userRepository.save(userEntity);
+            verificationResult = true;
         }
 
         return verificationResult;
@@ -219,7 +216,10 @@ public class UserServiceImpl implements UserService {
                 passwordRenewed = true;
             }
         }
-        passwordResetRepository.delete(passwordEntity);
+
+        if (passwordEntity != null) {
+            passwordResetRepository.delete(passwordEntity);
+        }
         return passwordRenewed;
     }
 

@@ -53,19 +53,24 @@ public class InitialUsersSetup {
         RoleEntity roleUser = createRole(Roles.ROLE_USER.name(), Arrays.asList(readAuthority, writeAuthority));
         RoleEntity roleAdmin = createRole(Roles.ROLE_ADMIN.name(), Arrays.asList(readAuthority, writeAuthority, deleteAuthority));
 
+        UserEntity user = new UserEntity();
         if (roleAdmin == null) return;
 
-        UserEntity adminUser = new UserEntity();
-        adminUser.setFirstName("John");
-        adminUser.setLastName("Garcia");
-        adminUser.setEmail("john@gwendolinanna.com");
-        adminUser.setEmailVerificationStatus(true);
-        adminUser.setUserId(utils.generateUserId(10));
-        adminUser.setEncryptedPassword(bCryptPasswordEncoder.encode("hola"));
-        adminUser.setRoles(new HashSet<>(Arrays.asList(roleAdmin)));
+
+        user.setFirstName("John");
+        user.setLastName("Garcia");
+        user.setEmail("john@gwendolinanna.com");
+        user.setEmailVerificationStatus(true);
+        user.setUserId(utils.generateUserId(10));
+        user.setEncryptedPassword(bCryptPasswordEncoder.encode("12345678"));
+        user.setRoles(new HashSet<>(Arrays.asList(roleAdmin)));
 
 
-        userRepository.save(adminUser);
+        UserEntity userEntity = userRepository.findByEmail(user.getEmail());
+        if (userEntity != null) {
+            userRepository.delete(userEntity);
+        }
+        userRepository.save(user);
 
     }
 

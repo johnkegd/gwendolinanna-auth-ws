@@ -1,6 +1,6 @@
 package com.gwendolinanna.ws.auth.app.ui.controller;
 
-import com.gwendolinanna.ws.auth.app.ui.model.request.LoginRequestModel;
+import com.gwendolinanna.ws.auth.app.ui.model.request.UserLoginRequestModel;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +34,7 @@ public class AuthenticationController {
                     })
     })
     @PostMapping("/users/login")
-    public void fakeLogin(@RequestBody LoginRequestModel loginRequestModel) {
+    public void fakeLogin(@RequestBody UserLoginRequestModel UserLoginRequestModel) {
         throw new IllegalStateException("This method should no be called. it's implemented by Spring Security");
     }
 
