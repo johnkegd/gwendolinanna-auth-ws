@@ -2,12 +2,15 @@ package com.gwendolinanna.auth.ws.app.io.repository;
 
 import com.gwendolinanna.auth.ws.app.io.entity.PostEntity;
 import com.gwendolinanna.auth.ws.app.io.entity.UserEntity;
+import com.gwendolinanna.auth.ws.app.io.repositories.RoleRepository;
 import com.gwendolinanna.auth.ws.app.io.repositories.UserRepository;
+import com.gwendolinanna.auth.ws.app.shared.Roles;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,12 +29,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Johnkegd
  */
+@Disabled
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 class UserRepositoryTest {
 
-    @Autowired
+    @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private RoleRepository roleRepository;
 
     private static boolean recordsCreated = false;
 
@@ -80,7 +89,7 @@ class UserRepositoryTest {
 
     @Test
     final void testFindUserByKeyword() {
-        String keyword = "wendo";
+        String keyword = "Rotach";
         List<UserEntity> users = userRepository.findUserByKeyword(keyword);
 
         assertNotNull(users);
@@ -92,7 +101,7 @@ class UserRepositoryTest {
 
     @Test
     final void testFindUsersFirstNameAndLastNameByKeyword() {
-        String keyword = "tac";
+        String keyword = "Gwendolin";
         List<Object[]> users = userRepository.findUsersFirstNameAndLastNameByKeyword(keyword);
 
         assertNotNull(users);
@@ -119,7 +128,7 @@ class UserRepositoryTest {
 
     @Test
     final void testFindUserEntityByUserId() {
-        String userId = "poiu";
+        String userId = "da123";
         UserEntity userEntity = userRepository.findUserEntityByUserId(userId);
 
         assertNotNull(userEntity);
@@ -128,7 +137,7 @@ class UserRepositoryTest {
 
     @Test
     final void testGetUserEntityFullNameById() {
-        List<Object[]> records = userRepository.getUserEntityFullNameById("t2eg");
+        List<Object[]> records = userRepository.getUserEntityFullNameById("da123");
 
         assertNotNull(records);
         assertTrue(records.size() == 1);
@@ -155,12 +164,14 @@ class UserRepositoryTest {
         userEntity.setEmail("gwendolin@gwendolinanna.com");
         userEntity.setEncryptedPassword("sdf1323");
         userEntity.setEmailVerificationStatus(true);
+        userEntity.setRoles(new HashSet<>(Arrays.asList(roleRepository.findByName(Roles.ROLE_USER.name()))));
 
         PostEntity three = new PostEntity();
         three.setCategory("photography");
         three.setPostId("asda12e");
         three.setDescription("the best photos section from this gallery");
         three.setIcon("fas af-gallery");
+        three.setIcon("image-tree.ong");
         three.setPrice(10);
         three.setTitle("the three");
         List<PostEntity> posts = new ArrayList<>();
@@ -168,5 +179,6 @@ class UserRepositoryTest {
 
         userEntity.setPosts(posts);
         userRepository.save(userEntity);
+        recordsCreated = true;
     }
 }

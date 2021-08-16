@@ -10,6 +10,7 @@ import com.gwendolinanna.auth.ws.app.shared.dto.PostDto;
 import com.gwendolinanna.auth.ws.app.shared.dto.UserDto;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -38,6 +39,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Johnkegd
  */
+@Disabled
 @SpringBootTest
 class UserServiceImplTest {
 

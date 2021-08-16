@@ -7,6 +7,7 @@ import com.gwendolinanna.auth.ws.app.shared.dto.UserDto;
 import com.gwendolinanna.auth.ws.app.ui.model.response.UserRest;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Johnkegd
  */
+@Disabled
 @SpringBootTest
 class UserControllerTest {
 

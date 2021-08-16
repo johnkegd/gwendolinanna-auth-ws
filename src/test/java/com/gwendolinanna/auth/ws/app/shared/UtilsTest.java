@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Johnkegd
  */
+@Disabled
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 class UtilsTest {
