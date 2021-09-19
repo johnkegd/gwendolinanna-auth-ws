@@ -29,11 +29,11 @@ public class GwendolinannaAuthWsApplication extends SpringBootServletInitializer
     @Bean
     ApplicationRunner applicationRunner(
             Environment environment,
-            @Value("${hola-perinola:default qlq}") String hola) {
+            @Value("${hola-perinola:default message}") String hi) {
 
         return args -> {
             log.info("message: " + environment.getProperty("message-from-application-properties"));
-            log.info("lol: " + hola);
+            log.info("message 2: " + hi);
         };
     }
 
