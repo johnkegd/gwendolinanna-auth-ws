@@ -1,13 +1,17 @@
 package com.gwendolinanna.auth.ws.app.ui.model.request;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * @author Johnkegd
+ * @author GwendolinAnna
  */
-@Setter
-@Getter
+
 public class PasswordResetRequestModel {
     private String email;
+
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
