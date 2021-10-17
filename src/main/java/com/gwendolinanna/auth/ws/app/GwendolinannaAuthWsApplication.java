@@ -1,5 +1,7 @@
 package com.gwendolinanna.auth.ws.app;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -15,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @SpringBootApplication
 public class GwendolinannaAuthWsApplication extends SpringBootServletInitializer {
+
+    private static final Logger log = LoggerFactory.getLogger(GwendolinannaAuthWsApplication.class);
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
